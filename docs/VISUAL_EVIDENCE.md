@@ -74,3 +74,13 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - Added `SkinTokens.kt` to centralize provisional spacing, radius, stroke and elevation values and to expose a shared Material 3 shape scale through `AlohaSkinTheme`.
 - This is a maintainability step, **not** a source-derived measurement result. Existing component-level literal dimensions are not yet fully normalized to these tokens.
 - The values in `SkinSpacing`, `SkinRadii`, `SkinStroke`, `SkinElevation` and `SkinShapes` remain provisional. No Voyage reference screenshot or source style has yet certified them.
+
+
+## Theme engine expansion — 2026-10-26
+
+- Added the MIT-licensed MaterialKolor dependency as the seed-based Material 3 palette generator. Upstream documents the seed-to-scheme pathway and palette styles; this establishes the implementation mechanism, not Voyage's exact version/defaults.
+- AlohaSkin now supports SYSTEM/LIGHT/DARK appearance mode, native Android 12+ system dynamic colors, MaterialKolor seed palettes, four local seed choices and four palette styles.
+- On Android 14+ the theme reads `UiModeManager.contrast` when available and forwards it to the MaterialKolor seed scheme. A manual contrast slider is exposed for controlled preview. On earlier Android versions, automatic contrast falls back to 0.0.
+- Current theme mode, seed, palette style and contrast controls are local Showcase state. They do not persist settings or invoke Voyage functionality.
+- The source analysis previously established that Voyage uses MaterialKolor, reads Android 14+ contrast and animates color scheme changes. Exact Voyage version, style/default seed, contrast mapping and transition specification still need confirmation. AlohaSkin's complete scheme animation is not implemented in this pass.
+- Upstream implementation/API reference: MaterialKolor repository and its documented `rememberDynamicColorScheme` seed/style/contrast pathway. Dependency license is MIT; the library also incorporates Google's Apache-2.0 Material Color Utilities. License notices still need to be included in the final dependency audit.
