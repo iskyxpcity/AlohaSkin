@@ -2,7 +2,16 @@
 
 ## Current implementation pass
 
-The repository contains a standalone Android Compose library module and a demo showcase app.
+The repository contains a standalone Android Compose library module and a Showcase app with four primary navigation pages.
+
+### Four primary navigation pages
+
+- **主页** — project overview, visual palette preview and shortcuts to Features/Settings.
+- **功能** — grouped reusable controls, surface patterns, palette cards, dialog and bottom-sheet samples.
+- **状态栏** — static status-bar mock preview with local toggles for clock, network speed, Wi-Fi, mobile signal and battery.
+- **设置** — local light/dark preview, Android 12+ system dynamic-color switch and implementation notes.
+- The four-item floating navigation stays visible at the bottom while page content scrolls. Page selection is local Showcase state only; no business routes or persistent settings are imported.
+- Status-bar mock values are illustrative only and do not read device telemetry or modify Android's real status bar.
 
 ### Components implemented (visual parity not yet certified)
 
@@ -24,18 +33,16 @@ The repository contains a standalone Android Compose library module and a demo s
 - Generic confirmation dialog shell: `SkinDialog`
 - Generic modal sheet shell: `SkinBottomSheet`
 - Floating navigation bar with selected/unselected items and optional translucent surface: `SkinFloatingNavigationBar`
-- Showcase demonstrates light/dark and dynamic palette switches, tabs, palette cards, switch/chip/slider states, buttons, dialog and sheet with local-only demo state.
 
 ### Build verification
 
-- Source commit `ca7fc5e73b010649e809eef81955a86365d2c908` was built successfully by AlohaSkin CI Run #19: https://github.com/iskyxpcity/AlohaSkin/actions/runs/40323387206
-- Run #19 completed successfully, including both `:aloha-skin:assembleDebug` and `:showcase:assembleDebug`, and uploaded artifact `AlohaSkin-Showcase-Debug-APK`.
-- Artifact ID: `12650342383`; ZIP size: `8,366,076 bytes`; artifact SHA-256: `7af01710431e8e1caa097611131133cd7397c09f30f772594d182a670807bc9f`.
-- Extracted `showcase-debug.apk`: `8,772,559 bytes`; SHA-256: `26a4c2b1f11ddb0f08d4394a1ab8c5a656684d6aff9f547fd26a81f37796ff03`. ZIP integrity and APK ZIP structure checks passed.
-- This is an installable **debug Showcase APK**, not a signed production release and not proof of visual 1:1 parity.
+- Four-page Showcase code commit: `ac1df402f6ab12bdecf3f0a9075d00444839d10c`.
+- The CI run for this commit must complete successfully before this version is called a verified build or its APK is delivered.
+- Previously verified Debug Showcase artifact was built from commit `ca7fc5e73b010649e809eef81955a86365d2c908`; it does **not** include the four-page navigation update and must not be represented as the new version.
 
 ### Still pending
 
+- Confirm the latest CI run for the four-page navigation commit and archive its matching APK
 - Extract and verify actual color, typography, spacing, shape, outline and elevation values from Voyage resources/screenshots
 - Custom seed/palette generation, Android 14+ contrast adaptation and animated scheme transitions; dependency and source-call-site review required
 - Replace provisional theme values only when supported by evidence
