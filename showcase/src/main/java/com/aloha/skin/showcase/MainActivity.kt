@@ -51,6 +51,8 @@ import com.aloha.skin.components.SkinSwitchRow
 import com.aloha.skin.components.SkinTabs
 import com.aloha.skin.theme.AlohaSkinTheme
 import com.aloha.skin.theme.SkinColors
+import com.aloha.skin.theme.SkinThemeMode
+import com.materialkolor.PaletteStyle
 
 private enum class MainPage(val title: String, val icon: String) {
     HOME("主页", "⌂"),
@@ -74,10 +76,32 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var darkPreview by remember { mutableStateOf(false) }
+            var themeMode by remember { mutableStateOf(SkinThemeMode.SYSTEM) }
             var dynamicPreview by remember { mutableStateOf(false) }
+            var selectedSeedIndex by remember { mutableIntStateOf(0) }
+            var paletteStyleIndex by remember { mutableIntStateOf(0) }
+            var useSystemContrast by remember { mutableStateOf(true) }
+            var contrastPreview by remember { mutableFloatStateOf(0f) }
             var selectedPage by remember { mutableStateOf(MainPage.HOME) }
-            AlohaSkinTheme(darkTheme = darkPreview, dynamicColor = dynamicPreview) {
+            val themeSeeds = listOf(
+                Color(0xFF6750A4),
+                Color(0xFF28677B),
+                Color(0xFF9A405B),
+                Color(0xFF426B45)
+            )
+            val paletteStyles = listOf(
+                PaletteStyle.TonalSpot,
+                PaletteStyle.Expressive,
+                PaletteStyle.Vibrant,
+                PaletteStyle.Monochrome
+            )
+            AlohaSkinTheme(
+                themeMode = themeMode,
+                dynamicColor = dynamicPreview,
+                seedColor = themeSeeds[selectedSeedIndex],
+                paletteStyle = paletteStyles[paletteStyleIndex],
+                contrastLevel = if (useSystemContrast) null else contrastPreview.toDouble()
+            ) {
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
                     bottomBar = {
@@ -110,10 +134,18 @@ class MainActivity : ComponentActivity() {
                                 MainPage.FEATURES -> FeaturesPage()
                                 MainPage.STATUS_BAR -> StatusBarPage()
                                 MainPage.SETTINGS -> SettingsPage(
-                                    darkPreview = darkPreview,
-                                    onDarkPreviewChange = { darkPreview = it },
+                                    themeMode = themeMode,
+                                    onThemeModeChange = { themeMode = it },
                                     dynamicPreview = dynamicPreview,
-                                    onDynamicPreviewChange = { dynamicPreview = it }
+                                    onDynamicPreviewChange = { dynamicPreview = it },
+                                    selectedSeedIndex = selectedSeedIndex,
+                                    onSeedChange = { selectedSeedIndex = it },
+                                    paletteStyleIndex = paletteStyleIndex,
+                                    onPaletteStyleChange = { paletteStyleIndex = it },
+                                    useSystemContrast = useSystemContrast,
+                                    onUseSystemContrastChange = { useSystemContrast = it },
+                                    contrastPreview = contrastPreview,
+                                    onContrastChange = { contrastPreview = it }
                                 )
                             }
                             Spacer(Modifier.height(8.dp))
@@ -258,16 +290,31 @@ private fun StatusBarPage() {
 
 @Composable
 private fun SettingsPage(
-    darkPreview: Boolean,
-    onDarkPreviewChange: (Boolean) -> Unit,
+    themeMode: SkinThemeMode,
+    onThemeModeChange: (SkinThemeMode) -> Unit,
     dynamicPreview: Boolean,
-    onDynamicPreviewChange: (Boolean) -> Unit
+    onDynamicPreviewChange: (Boolean) -> Unit,
+    selectedSeedIndex: Int,
+    onSeedChange: (Int) -> Unit,
+    paletteStyleIndex: Int,
+    onPaletteStyleChange: (Int) -> Unit,
+    useSystemContrast: Boolean,
+    onUseSystemContrastChange: (Boolean) -> Unit,
+    contrastPreview: Float,
+    onContrastChange: (Float) -> Unit
 ) {
     var selectedSetting by remember { mutableStateOf<String?>(null) }
     var selectedTab by remember { mutableIntStateOf(0) }
     val expandedGroups = remember { mutableStateMapOf<String, Boolean>() }
     val values = remember { mutableStateMapOf<String, String>() }
     val switches = remember { mutableStateMapOf<String, Boolean>() }
+    val seedNames = listOf("Violet", "Ocean", "Rose", "Forest")
+    val styleNames = listOf("Tonal Spot", "Expressive", "Vibrant", "Monochrome")
+    val modeName = when (themeMode) {
+        SkinThemeMode.SYSTEM -> "系统"
+        SkinThemeMode.LIGHT -> "浅色"
+        SkinThemeMode.DARK -> "深色"
+    }
 
     if (selectedSetting != null) {
         SettingDetailPage(
@@ -282,15 +329,38 @@ private fun SettingsPage(
     }
 
     SkinFrame(title = "主题外观") {
-        SkinChoiceChips(listOf("浅色", "深色", "系统"), if (darkPreview) "深色" else "浅色", {
-            onDarkPreviewChange(it == "深色")
+        Text("主题模式", style = MaterialTheme.typography.titleSmall)
+        SkinChoiceChips(listOf("系统", "浅色", "深色"), modeName, {
+            onThemeModeChange(
+                when (it) {
+                    "浅色" -> SkinThemeMode.LIGHT
+                    "深色" -> SkinThemeMode.DARK
+                    else -> SkinThemeMode.SYSTEM
+                }
+            )
         }, Modifier.fillMaxWidth())
-        SkinPreferenceRow("深色主题预览", "切换整个 Showcase 的主题外观", trailing = {
-            Switch(checked = darkPreview, onCheckedChange = onDarkPreviewChange)
-        })
-        SkinPreferenceRow("系统动态配色", "Android 12+ 原生动态色板预览", trailing = {
+        SkinPreferenceRow("系统动态配色", "Android 12+ 系统调色板；开启后优先于自定义种子色", trailing = {
             Switch(checked = dynamicPreview, onCheckedChange = onDynamicPreviewChange)
         })
+        Text("自定义种子色", style = MaterialTheme.typography.titleSmall)
+        SkinChoiceChips(seedNames, seedNames[selectedSeedIndex], { chosen ->
+            onSeedChange(seedNames.indexOf(chosen).coerceAtLeast(0))
+        }, Modifier.fillMaxWidth())
+        Text("调色板风格", style = MaterialTheme.typography.titleSmall)
+        SkinChoiceChips(styleNames, styleNames[paletteStyleIndex], { chosen ->
+            onPaletteStyleChange(styleNames.indexOf(chosen).coerceAtLeast(0))
+        }, Modifier.fillMaxWidth())
+        SkinPreferenceRow("跟随系统对比度", "Android 14+ 可读取系统对比度；其他版本回退到标准对比度", trailing = {
+            Switch(checked = useSystemContrast, onCheckedChange = onUseSystemContrastChange)
+        })
+        if (!useSystemContrast) {
+            SkinSliderRow("对比度", contrastPreview, onContrastChange, -1f..1f)
+        }
+        Text(
+            "种子色与调色板仅控制视觉配色；当前选项保存在 Showcase 内存中。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall
+        )
     }
     Text("主题设置", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
     settingGroups.forEach { (group, options) ->
