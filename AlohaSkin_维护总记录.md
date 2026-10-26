@@ -242,3 +242,37 @@
 
 **下次续作**
 - 先完整读取本记录，优先处理所有最新 CI 结果并拿到与当前 HEAD 对应的 APK，然后继续实现与验证；追加 K.008，不覆盖历史。
+
+
+### K.008 — 2026-10-26：完成共享令牌接入并验证可交付 Showcase APK
+
+**本次执行**
+- 续作前完整读取维护总记录；在 K.007 之后继续将共享令牌应用到核心组件与高级组件。
+- `SkinAdvancedComponents.kt` 中的 surface、palette card、button pair 和 bottom sheet 开始消费共享的圆角、间距、描边和 elevation token。
+- `SkinComponents.kt` 中的 frame、accordion、preference row、choice chips、slider row 使用共享 token 作为默认尺寸来源。仍有个别组件值和文字样式未统一，且全部 token 都仍是 provisional，不能据此宣称已按 Voyage 源码测量。
+- 更新 `docs/IMPLEMENTATION_STATUS.md`，登记最新代码构建、产物 ID、ZIP 与 APK 的 SHA-256，并把“等待最新构建/归档”改为已验证的调试 Showcase 产物。
+
+**代码提交**
+- `f4366a1d179f820f9b6da37c50c94781debd25ab` — `refactor: consume shared tokens in advanced components`。
+- `ca7fc5e73b010649e809eef81955a86365d2c908` — `refactor: normalize core components to shared tokens`。
+- `57ea0d224987e7b186ca470e6c76a35c0e4d8ab5` — `docs: record verified showcase debug APK`。
+- 本条维护记录追加后会产生新的记录提交；本条中记录的构建源代码 SHA 以 `ca7fc5e` 为准。
+- 工作分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改、未合并。
+
+**构建与 APK 验证**
+- AlohaSkin CI Run #19 对代码提交 `ca7fc5e73b010649e809eef81955a86365d2c908` 已完成且成功：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40323387206`。
+- Library 与 Showcase 两个 assembleDebug 构建步骤成功，`Upload showcase APK` 成功。
+- Artifact 名称：`AlohaSkin-Showcase-Debug-APK`；Artifact ID：`12650342383`；ZIP 大小：`8,366,076 bytes`；ZIP SHA-256：`7af01710431e8e1caa097611131133cd7397c09f30f772594d182a670807bc9f`。
+- 从 ZIP 解出的 `showcase-debug.apk` 大小：`8,772,559 bytes`；APK SHA-256：`26a4c2b1f11ddb0f08d4394a1ab8c5a656684d6aff9f547fd26a81f37796ff03`。已通过 ZIP 完整性检查，APK 文件结构检查未发现压缩包错误。
+- 该文件是可安装的 **Debug Showcase APK**，可用于查看当前组件展示与试验主题；它不是签名生产版，也不是 AlohaSkin 视觉系统 1:1 完成证明。
+- 本地交付文件名：`AlohaSkin_Showcase_Debug_20261026.apk`。
+
+**仍未完成（不得标记为 1:1 完成）**
+1. Voyage 真实 Compose 主题调用点和 MaterialKolor 自定义 seed/palette、Android 14+ contrast adaptation、色彩过渡动画的完整核验/实现。
+2. 为 Voyage 原版浅色/深色页面和 Showcase 组件采集可对照截图，测量边距、字体、圆角、描边、颜色、阴影和动效，并记录偏差。
+3. 将剩余字面尺寸统一到 tokens；补齐按压/焦点/禁用等状态、无障碍语义与自动化测试。
+4. 完成 API 示例、依赖与许可审查；在视觉证据充分且所有验收项通过前，不修改或合并 `main`。
+5. 本条维护记录自身提交后的 CI 仍需观察；如果其构建失败，继续读日志、修复和重跑。
+
+**下次续作**
+- 先完整读取本文件，检查本条记录提交触发的 CI 最终状态与产物；之后继续处理视觉测量/对照和未完成验收项，追加 K.009，不覆盖旧记录。
