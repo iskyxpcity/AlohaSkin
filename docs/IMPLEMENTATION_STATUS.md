@@ -40,7 +40,7 @@ AlohaSkin is a standalone Compose visual theme/component library with a four-pag
 
 ### Still pending
 
-- Verify CI for the latest animated-theme code SHA and produce/inspect a matching APK artifact; earlier SHA `0d88e6d1...` already passed and its APK was ZIP- and APK-integrity checked, but it predates the animation change.
+- CI for animated-theme code SHA `71725fa864b3e15e1f65a89fccc318439b60e7ef` passed (Run `40329490435`); artifact ID `12655175663` was downloaded, ZIP integrity and internal APK integrity were verified, and SHA-256 was recorded in the maintenance log. The package is a debug Showcase APK, not a production release.
 - Complete ColorScheme animation is now wired for the MaterialKolor seed-palette path through MaterialKolor 2.0.0 `DynamicMaterialTheme(animate = true)`, preserving all scheme roles and shared shape tokens. It uses the library default spring; source-matched Voyage timing/easing remains unverified.
 - Confirm Voyage's precise MaterialKolor version, palette style, seed default, contrast default and Android 14+ contrast mapping from its theme call site.
 - Normalize component-level dimensions to shared tokens.
