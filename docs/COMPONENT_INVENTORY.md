@@ -22,7 +22,7 @@ No component is marked complete until its appearance and states have been implem
 | Palette styles | Tonal Spot, Expressive, Vibrant and Monochrome exposed in Showcase |
 | Seed-color choices | Violet, Ocean, Rose and Forest preview seeds |
 | Android 14+ contrast | Reads system contrast when available; manual -1..+1 preview control also available |
-| Full color-scheme animation | Pending; must use a verified API and be checked against Voyage timing/easing |
+| Full color-scheme animation | Implemented for the custom seed path using MaterialKolor 2.0.0 `DynamicMaterialTheme(animate = true)`; exact Voyage timing/easing pending |
 | Voyage-exact seed/style/contrast defaults | Pending source-call-site verification |
 | Static fallback palette | Provisional only; no pixel-parity claim |
 | Shared shape/spacing/stroke/elevation tokens | Centralized but values still provisional |
