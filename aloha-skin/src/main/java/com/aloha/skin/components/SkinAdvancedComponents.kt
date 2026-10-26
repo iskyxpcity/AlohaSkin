@@ -143,3 +143,26 @@ fun SkinDialog(
         )
     }
 }
+
+/** Generic modal sheet shell. It presents caller-supplied content and stores no app data. */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+fun SkinBottomSheet(
+    visible: Boolean,
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    if (visible) {
+        androidx.compose.material3.ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+        ) {
+            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+                content()
+                Spacer(Modifier.height(20.dp))
+            }
+        }
+    }
+}
