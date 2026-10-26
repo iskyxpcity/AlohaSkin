@@ -311,3 +311,33 @@
 3. 实机检查四页底部导航、页面滚动、主题切换与状态栏模拟布局。
 4. 继续补齐视觉参数证据、无障碍语义、组件状态、自动化测试与许可审查；未完成前不得称为 Voyage 1:1。
 5. 下一次续作先完整读取本文件，再追加 K.010，不覆盖历史。
+
+
+### K.010 — 2026-10-26：四页 Showcase 构建成功并交付 APK
+
+**构建验证结果**
+- 四页主导航代码提交 `ac1df402f6ab12bdecf3f0a9075d00444839d10c` 对应 Actions Run #22 / ID `40325376216` 已完成且成功：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40325376216`。
+- `Build library and showcase` 和 `Upload showcase APK` 两个步骤均成功。
+- Artifact：`AlohaSkin-Showcase-Debug-APK`；Artifact ID `12650308983`；ZIP 大小 `8,385,690 bytes`；ZIP SHA-256 `56b817ebaf797017428f10ee42617b44a38a48397e2e6a4d673aac8d0f0a52e9`。
+- 已下载并通过 ZIP 完整性检查（`testzip=None`），内部仅有 `showcase-debug.apk`。
+- 解出 APK 大小 `8,788,943 bytes`；APK SHA-256 `51454f71822658e33c3b679eeba9f369cb7814f3d2fe0d4c1e413fd6b0e0b8eb`；APK 文件以 ZIP 头 `PK\x03\x04` 开始，结构检查通过。
+- 本地文件名：`AlohaSkin_Showcase_Four_Pages_20261026.apk`。
+- 该 APK 是四页导航版本的可安装 Debug Showcase；不是签名生产发布版，也不代表 Voyage 视觉 1:1 验收已完成。
+
+**产物交付内容**
+- 主页、功能、状态栏、设置四个主导航页面已在上述构建源代码中实现。
+- 底部浮动主导航固定显示，页面切换和控件状态均为本地 Demo 状态。
+- 状态栏页只呈现模拟时间、网速、Wi-Fi、移动信号、电池样式，不访问真实设备状态，不改变 Android 系统状态栏。
+
+**当前 HEAD / CI**
+- 四页代码提交 `ac1df402f6ab12bdecf3f0a9075d00444839d10c` 已有成功构建和匹配 APK。
+- 后续实现状态文档提交 `c2596644ce0e455eca786922ac242ac0dcfc35b6` 对应 Run `40325410587` 已成功。
+- 本维护记录提交前最新维护记录提交 `fa1591ecf56e4b4e7a4e7a54871b42c2ac81ff5a` 的 CI Run `40325448863` 在本条写入时仍为 `in_progress`；需要后续检查，但它不改变四页代码提交已有的成功构建证据。
+- 工作分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改、未合并。
+
+**尚未完成**
+1. 实机安装并逐页检查底部导航、系统栏 Insets、页面滚动、动态配色和小屏布局。
+2. 继续从 Voyage 参考证据校准颜色、字体、圆角、间距、描边、阴影和动效；当前仍是可复用视觉 scaffold，不得称 1:1。
+3. 增加无障碍描述/语义、按压/焦点状态与自动化测试。
+4. 完成依赖与许可审查、独立库 API 示例及发布构建配置。
+5. 后续续作前先完整读取本文件，并追加 K.011，不覆盖旧历史。
