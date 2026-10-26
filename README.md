@@ -11,8 +11,8 @@ The implementation should be cleanly separated from Voyage's application logic a
 ## Design targets
 
 - Light and dark appearance
-- Optional Android 12+ system dynamic color scheme (opt-in); custom seed palette generation remains separate work
-- Dynamic/accent color and palette roles
+- System/light/dark appearance modes; optional Android 12+ system dynamic palette and MaterialKolor seed-based palettes
+- Dynamic/accent color and palette roles, with animated full ColorScheme transitions on the custom seed-palette path
 - Typography and spacing tokens
 - Surface, container, frame, outline, and elevation recipes
 - Reusable controls: buttons, switches, sliders, rows/preferences, tabs, chips, selectors, dialogs, sheets, and expandable groups
