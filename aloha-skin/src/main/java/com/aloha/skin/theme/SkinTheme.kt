@@ -92,8 +92,8 @@ fun AlohaSkinTheme(
     if (!platformDynamicColorsAvailable && seedColor != null) {
         DynamicMaterialTheme(
             seedColor = seedColor,
-            isDark = useDarkTheme,
-            isAmoled = false,
+            useDarkTheme = useDarkTheme,
+            withAmoled = false,
             style = paletteStyle.toMaterialKolorStyle(),
             contrastLevel = resolvedContrast,
             shapes = SkinShapes,
