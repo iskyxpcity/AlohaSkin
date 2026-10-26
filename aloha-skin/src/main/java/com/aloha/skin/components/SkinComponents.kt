@@ -31,6 +31,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aloha.skin.theme.SkinElevation
+import com.aloha.skin.theme.SkinRadii
+import com.aloha.skin.theme.SkinSpacing
+import com.aloha.skin.theme.SkinStroke
 
 /** Reusable outlined frame for grouping related controls. */
 @Composable
@@ -41,15 +45,15 @@ fun SkinFrame(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = .75f)),
+        shape = RoundedCornerShape(SkinRadii.frame),
+        border = BorderStroke(SkinStroke.hairline, MaterialTheme.colorScheme.outline.copy(alpha = .75f)),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = SkinElevation.flat)
     ) {
-        Column(Modifier.padding(16.dp)) {
+        Column(Modifier.padding(SkinSpacing.lg)) {
             if (title != null) {
                 Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(SkinSpacing.sm + SkinSpacing.xs))
             }
             content()
         }
@@ -68,14 +72,14 @@ fun SkinAccordion(
     val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "accordion-arrow")
     Card(
         modifier = modifier.fillMaxWidth().animateContentSize(),
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(SkinRadii.frame),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = .45f)),
-        elevation = CardDefaults.cardElevation(0.dp)
+        border = BorderStroke(SkinStroke.hairline, MaterialTheme.colorScheme.outline.copy(alpha = .45f)),
+        elevation = CardDefaults.cardElevation(SkinElevation.flat)
     ) {
         Column {
             Row(
-                Modifier.fillMaxWidth().clickable { onExpandedChange(!expanded) }.padding(horizontal = 18.dp, vertical = 17.dp),
+                Modifier.fillMaxWidth().clickable { onExpandedChange(!expanded) }.padding(horizontal = SkinSpacing.lg + SkinSpacing.xs, vertical = SkinSpacing.lg + SkinSpacing.xs),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(title, modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
@@ -83,7 +87,7 @@ fun SkinAccordion(
             }
             if (expanded) {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = .35f))
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) { content() }
+                Column(Modifier.padding(SkinSpacing.lg), verticalArrangement = Arrangement.spacedBy(SkinSpacing.md + SkinSpacing.xs)) { content() }
             }
         }
     }
@@ -102,12 +106,12 @@ fun SkinPreferenceRow(
     Row(
         modifier = modifier.fillMaxWidth()
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(vertical = 9.dp),
+            .padding(vertical = SkinSpacing.sm + SkinSpacing.xs),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(14.dp)
+        horizontalArrangement = Arrangement.spacedBy(SkinSpacing.md + SkinSpacing.xs)
     ) {
         if (leading != null) leading()
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SkinSpacing.xxs + SkinSpacing.xs / 2)) {
             Text(title, style = MaterialTheme.typography.bodyLarge)
             if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -148,19 +152,19 @@ fun SkinChoiceChips(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier, horizontalArrangement = Arrangement.spacedBy(SkinSpacing.sm), verticalAlignment = Alignment.CenterVertically) {
         choices.forEach { choice ->
             val isSelected = choice == selected
             Card(
                 modifier = Modifier.then(if (enabled) Modifier.clickable { onSelected(choice) } else Modifier),
                 shape = CircleShape,
-                border = BorderStroke(1.dp, (if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline).copy(alpha = if (enabled) 1f else .38f)),
+                border = BorderStroke(SkinStroke.hairline, (if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline).copy(alpha = if (enabled) 1f else .38f)),
                 colors = CardDefaults.cardColors(containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent),
-                elevation = CardDefaults.cardElevation(0.dp)
+                elevation = CardDefaults.cardElevation(SkinElevation.flat)
             ) {
                 Text(
                     choice,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                    modifier = Modifier.padding(horizontal = SkinSpacing.lg - SkinSpacing.xs, vertical = SkinSpacing.sm + SkinSpacing.xs / 4),
                     color = (if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface).copy(alpha = if (enabled) 1f else .38f),
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -176,7 +180,7 @@ fun SkinSliderRow(
     onValueChange: (Float) -> Unit,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(SkinSpacing.xs)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(title, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
             Text(value.toInt().toString(), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
