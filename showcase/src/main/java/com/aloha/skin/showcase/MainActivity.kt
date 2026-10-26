@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,6 +59,17 @@ private enum class MainPage(val title: String, val icon: String) {
     SETTINGS("设置", "⚙")
 }
 
+private val settingGroups = listOf(
+    "DESIGN" to listOf("主题方案", "主题模式", "动态配色", "强调色", "配色过渡"),
+    "NAVIGATION_BAR" to listOf("导航栏样式", "浮动导航", "透明表面", "选中状态", "图标与标签"),
+    "MODE" to listOf("浅色模式", "深色模式", "跟随系统", "对比度"),
+    "LAUNCH" to listOf("启动页样式", "启动图标", "启动动画"),
+    "ASSIST" to listOf("触感反馈", "动效偏好", "界面反馈"),
+    "SHAPE" to listOf("整体圆角", "卡片形状", "按钮形状", "描边样式"),
+    "COMPONENTS" to listOf("按钮", "开关", "滑块", "选择标签", "对话框", "底部弹层"),
+    "SHADOWS" to listOf("阴影层级", "浮层高度", "表面层次")
+)
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,25 +95,29 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Column(
-                        Modifier.fillMaxSize()
-                            .padding(innerPadding)
-                            .verticalScroll(rememberScrollState())
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        Modifier.fillMaxSize().padding(innerPadding),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        PageHeader(selectedPage)
-                        when (selectedPage) {
-                            MainPage.HOME -> HomePage(onOpenFeatures = { selectedPage = MainPage.FEATURES }, onOpenSettings = { selectedPage = MainPage.SETTINGS })
-                            MainPage.FEATURES -> FeaturesPage()
-                            MainPage.STATUS_BAR -> StatusBarPage()
-                            MainPage.SETTINGS -> SettingsPage(
-                                darkPreview = darkPreview,
-                                onDarkPreviewChange = { darkPreview = it },
-                                dynamicPreview = dynamicPreview,
-                                onDynamicPreviewChange = { dynamicPreview = it }
-                            )
+                        TotalTitleBar()
+                        Column(
+                            Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())
+                                .padding(horizontal = 20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            PageOptionFrame(selectedPage)
+                            when (selectedPage) {
+                                MainPage.HOME -> HomePage()
+                                MainPage.FEATURES -> FeaturesPage()
+                                MainPage.STATUS_BAR -> StatusBarPage()
+                                MainPage.SETTINGS -> SettingsPage(
+                                    darkPreview = darkPreview,
+                                    onDarkPreviewChange = { darkPreview = it },
+                                    dynamicPreview = dynamicPreview,
+                                    onDynamicPreviewChange = { dynamicPreview = it }
+                                )
+                            }
+                            Spacer(Modifier.height(8.dp))
                         }
-                        Spacer(Modifier.height(8.dp))
                     }
                 }
             }
@@ -109,67 +126,58 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun PageHeader(page: MainPage) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(page.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.SemiBold)
+private fun TotalTitleBar() {
+    Column(
+        Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 2.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text("AlohaSkin", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
         Text(
-            when (page) {
-                MainPage.HOME -> "AlohaSkin · 视觉主题与组件系统"
-                MainPage.FEATURES -> "浏览可复用的视觉组件"
-                MainPage.STATUS_BAR -> "状态栏样式预览 · 仅展示，不修改系统"
-                MainPage.SETTINGS -> "主题外观与 Showcase 设置"
-            },
+            "Voyage-inspired visual theme & components",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
 
 @Composable
-private fun HomePage(onOpenFeatures: () -> Unit, onOpenSettings: () -> Unit) {
-    SkinFrame(title = "欢迎使用 AlohaSkin") {
-        Text("独立的视觉主题与 UI 组件库", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(6.dp))
-        Text(
-            "通过四个主导航页面查看主页概览、组件功能、状态栏样式和外观设置。当前页面是可交互的 Showcase，控件不会触发真实系统功能。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(Modifier.height(12.dp))
-        SkinButtonPair(
-            primaryLabel = "浏览功能",
-            secondaryLabel = "外观设置",
-            onPrimary = onOpenFeatures,
-            onSecondary = onOpenSettings
-        )
-    }
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SummaryCard("4", "主导航页面", Modifier.weight(1f))
-        SummaryCard("UI", "可复用组件", Modifier.weight(1f))
-    }
-    SkinFrame(title = "视觉预览") {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            listOf(SkinColors.LightAccent, Color(0xFF8A80B8), Color(0xFFB9B0D8), Color(0xFFE4DFF2)).forEach { color ->
-                Box(Modifier.weight(1f).height(48.dp).clip(MaterialTheme.shapes.medium).background(color))
+private fun PageOptionFrame(page: MainPage) {
+    SkinFrame(title = "页面") {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainPage.values().forEach { item ->
+                val selected = item == page
+                Surface(
+                    modifier = Modifier.weight(1f).clip(RoundedCornerShape(14.dp))
+                        .clickable(enabled = false) {},
+                    shape = RoundedCornerShape(14.dp),
+                    color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                ) {
+                    Column(
+                        Modifier.padding(vertical = 10.dp, horizontal = 2.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(item.icon, color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            item.title,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
-        Spacer(Modifier.height(10.dp))
-        Text("颜色仅为当前临时预览值，尚未通过 Voyage 原版截图测量验收。", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
     }
 }
 
 @Composable
-private fun SummaryCard(value: String, label: String, modifier: Modifier = Modifier) {
-    Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.surfaceVariant
-    ) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-    }
+private fun HomePage() {
+    // Intentionally sparse: the global title, page-option frame and bottom navigation remain visible.
+    Spacer(Modifier.height(4.dp))
 }
 
 @Composable
@@ -200,9 +208,7 @@ private fun FeaturesPage() {
             Text("下方组件仅展示外观与容器层级。", color = MaterialTheme.colorScheme.onSurfaceVariant)
             SkinButtonPair("显示弹层", "显示对话框", { showSheet = true }, { showDialog = true })
         }
-        SkinFrame(title = "浮动导航表面") {
-            Text("主导航栏固定在屏幕底部；此处为组件示例说明。")
-        }
+        SkinFrame(title = "浮动导航表面") { Text("主导航栏固定在屏幕底部；此处为组件示例。") }
     } else {
         SkinPaletteCard("Violet", listOf(SkinColors.LightAccent, Color(0xFF8A80B8), Color(0xFFB9B0D8), Color(0xFFE4DFF2)), selectedPalette == 0, { selectedPalette = 0 })
         SkinPaletteCard("Ocean", listOf(Color(0xFF245B78), Color(0xFF4D879F), Color(0xFF8AB6C5), Color(0xFFD7E8ED)), selectedPalette == 1, { selectedPalette = 1 })
@@ -223,11 +229,7 @@ private fun StatusBarPage() {
     var showClock by remember { mutableStateOf(true) }
     SkinFrame(title = "状态栏预览") {
         Text("演示区域", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
-        Surface(
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Surface(shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.surfaceVariant, modifier = Modifier.fillMaxWidth()) {
             Row(
                 Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -243,7 +245,7 @@ private fun StatusBarPage() {
             }
         }
         Spacer(Modifier.height(8.dp))
-        Text("这些图标和数据是静态模拟，不读取手机状态，也不修改 Android 系统状态栏。", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        Text("图标和数据是静态模拟，不读取手机状态，也不修改系统状态栏。", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
     }
     SkinFrame(title = "预览项目") {
         SkinSwitchRow("时间", checked = showClock, onCheckedChange = { showClock = it })
@@ -261,22 +263,107 @@ private fun SettingsPage(
     dynamicPreview: Boolean,
     onDynamicPreviewChange: (Boolean) -> Unit
 ) {
-    var selectedMode by remember { mutableStateOf("系统") }
-    SkinFrame(title = "主题模式") {
-        SkinChoiceChips(listOf("浅色", "深色", "系统"), selectedMode, {
-            selectedMode = it
+    var selectedSetting by remember { mutableStateOf<String?>(null) }
+    var selectedTab by remember { mutableIntStateOf(0) }
+    val expandedGroups = remember { mutableStateMapOf<String, Boolean>() }
+    val values = remember { mutableStateMapOf<String, String>() }
+    val switches = remember { mutableStateMapOf<String, Boolean>() }
+
+    if (selectedSetting != null) {
+        SettingDetailPage(
+            title = selectedSetting!!,
+            selectedTab = selectedTab,
+            onTabChange = { selectedTab = it },
+            onBack = { selectedSetting = null },
+            values = values,
+            switches = switches
+        )
+        return
+    }
+
+    SkinFrame(title = "主题外观") {
+        SkinChoiceChips(listOf("浅色", "深色", "系统"), if (darkPreview) "深色" else "浅色", {
             onDarkPreviewChange(it == "深色")
         }, Modifier.fillMaxWidth())
-        SkinPreferenceRow("深色主题预览", "仅改变 Showcase 的主题", trailing = {
+        SkinPreferenceRow("深色主题预览", "切换整个 Showcase 的主题外观", trailing = {
             Switch(checked = darkPreview, onCheckedChange = onDarkPreviewChange)
         })
-        SkinPreferenceRow("系统动态配色", "Android 12+；使用设备壁纸色板", trailing = {
+        SkinPreferenceRow("系统动态配色", "Android 12+ 原生动态色板预览", trailing = {
             Switch(checked = dynamicPreview, onCheckedChange = onDynamicPreviewChange)
         })
     }
-    SkinFrame(title = "显示信息") {
-        SkinPreferenceRow("AlohaSkin", "独立视觉主题与组件库", trailing = { Text("Demo", color = MaterialTheme.colorScheme.onSurfaceVariant) })
-        SkinPreferenceRow("当前范围", "主题、组件和状态栏静态预览")
-        SkinPreferenceRow("视觉校准", "原版尺寸/颜色/字体对照仍在进行")
+    Text("主题设置", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+    settingGroups.forEach { (group, options) ->
+        SkinAccordion(
+            title = group,
+            expanded = expandedGroups[group] ?: false,
+            onExpandedChange = { expandedGroups[group] = it }
+        ) {
+            options.forEach { option ->
+                SkinPreferenceRow(
+                    title = option,
+                    subtitle = "外观选项 · 仅本地展示状态",
+                    trailing = { Text("›", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    onClick = { selectedSetting = option; selectedTab = 0 }
+                )
+            }
+        }
+    }
+    SkinFrame(title = "其他设置样例") {
+        SkinPreferenceRow("主题详情", "调色板、组件状态和详细选项", trailing = { Text("›") }, onClick = { selectedSetting = "主题详情" })
+        SkinPreferenceRow("关于 AlohaSkin", "独立主题与组件 Showcase", trailing = { Text("›") }, onClick = { selectedSetting = "关于 AlohaSkin" })
+    }
+}
+
+@Composable
+private fun SettingDetailPage(
+    title: String,
+    selectedTab: Int,
+    onTabChange: (Int) -> Unit,
+    onBack: () -> Unit,
+    values: MutableMap<String, String>,
+    switches: MutableMap<String, Boolean>
+) {
+    var expandedLevel by remember(title) { mutableIntStateOf(1) }
+    SkinFrame(title = "设置详情") {
+        SkinPreferenceRow("返回设置列表", title, trailing = { Text("‹", style = MaterialTheme.typography.titleLarge) }, onClick = onBack)
+    }
+    SkinFrame(title = title) {
+        SkinTabs(listOf("选项", "样式", "详情"), selectedTab, onTabChange)
+        Spacer(Modifier.height(12.dp))
+        when (selectedTab) {
+            0 -> {
+                SkinPreferenceRow("一级选项", "基础设置项", trailing = { Text(values["$title:一级"] ?: "默认") }, onClick = { values["$title:一级"] = if (values["$title:一级"] == "已选择") "默认" else "已选择" })
+                SkinAccordion("二级选项", expanded = expandedLevel >= 2, onExpandedChange = { expandedLevel = if (it) 2 else 1 }) {
+                    SkinPreferenceRow("二级 · 样式选择", "可切换的本地选项", trailing = { Text(values["$title:二级"] ?: "跟随主题") }, onClick = { values["$title:二级"] = if (values["$title:二级"] == "自定义") "跟随主题" else "自定义" })
+                    SkinAccordion("三级选项", expanded = expandedLevel >= 3, onExpandedChange = { expandedLevel = if (it) 3 else 2 }) {
+                        SkinPreferenceRow("三级 · 细节参数", "更深层的视觉选项", trailing = { Text(values["$title:三级"] ?: "默认") }, onClick = { values["$title:三级"] = if (values["$title:三级"] == "精细") "默认" else "精细" })
+                        SkinAccordion("更多详情", expanded = expandedLevel >= 4, onExpandedChange = { expandedLevel = if (it) 4 else 3 }) {
+                            SkinSwitchRow("高级视觉选项", "仅改变此页面的示例状态", switches["$title:高级"] ?: false, { switches["$title:高级"] = it })
+                            SkinSliderRow("细节强度", (values["$title:强度"]?.toFloatOrNull() ?: 50f), { values["$title:强度"] = it.toInt().toString() }, 0f..100f)
+                        }
+                    }
+                }
+            }
+            1 -> {
+                SkinChoiceChips(listOf("默认", "柔和", "强调"), values["$title:样式"] ?: "默认", { values["$title:样式"] = it }, Modifier.fillMaxWidth())
+                SkinFrame(title = "组件状态预览") {
+                    SkinButtonPair("选中状态", "未选中状态", {}, {}, enabled = true)
+                    SkinSwitchRow("示例开关", checked = switches["$title:样式开关"] ?: true, onCheckedChange = { switches["$title:样式开关"] = it })
+                }
+            }
+            else -> {
+                SkinPreferenceRow("当前项目", title)
+                SkinPreferenceRow("应用范围", "所有页面均使用共享主题色、形状和文字层级")
+                SkinPreferenceRow("数据范围", "本地演示状态；离开页面不承诺持久保存")
+                SkinFrame(title = "色彩与表面") {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.outline).forEach {
+                            Box(Modifier.weight(1f).height(34.dp).clip(MaterialTheme.shapes.small).background(it))
+                        }
+                    }
+                }
+            }
+        }
     }
 }
