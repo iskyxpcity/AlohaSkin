@@ -35,6 +35,7 @@ object SkinColors {
  * [dynamicColor] opts into Android's system dynamic palette on Android 12+.
  * This is theme plumbing only; it does not persist user choices or import Voyage logic.
  * A custom seed/palette generator is intentionally separate and remains future work.
+ * Shared shape tokens are applied here; their values remain provisional until measured.
  */
 @Composable
 fun AlohaSkinTheme(
@@ -71,5 +72,5 @@ fun AlohaSkinTheme(
             outline = SkinColors.LightOutline
         )
     }
-    MaterialTheme(colorScheme = scheme, content = content)
+    MaterialTheme(colorScheme = scheme, shapes = SkinShapes, content = content)
 }
