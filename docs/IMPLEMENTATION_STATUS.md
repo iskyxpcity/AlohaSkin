@@ -1,30 +1,37 @@
 # Implementation Status
 
-## First implementation pass
+## Initial implementation pass
 
-The repository now has a standalone Android Compose library module and a demo showcase app.
+The repository contains a standalone Android Compose library module and a demo showcase app.
 
-### Implemented in code (initial styling, not yet visually verified as 1:1)
+### Components currently implemented in code (not yet visually verified as 1:1)
 
 - Semantic light/dark color schemes
-- Outlined rounded frame/container
-- Expandable group with animated size and rotating disclosure glyph
-- Preference row with optional subtitle and trailing slot
-- Switch row
-- Selected/unselected action button
-- Selected/unselected choice chips
-- Slider row
-- Showcase-only demo screen with local UI state
+- Outlined rounded frame/container: `SkinFrame`
+- Generic surface/container primitive: `SkinSurface`
+- Expandable group with size animation and rotating disclosure glyph: `SkinAccordion`
+- Preference row with optional subtitle and trailing slot: `SkinPreferenceRow`
+- Switch row: `SkinSwitchRow`
+- Selected/unselected action button: `SkinActionButton`
+- Choice chips: `SkinChoiceChips`
+- Slider row: `SkinSliderRow`
+- Tabs: `SkinTabs`
+- Theme palette preview card: `SkinPaletteCard`
+- Enabled/disabled primary and outlined button pair: `SkinButtonPair`
+- Generic confirmation dialog shell: `SkinDialog`
+- Showcase controls use local demo state only and do not invoke Voyage product features.
 
 ### Still pending
 
-- Full measurement of Voyage color resources, typography, paddings, component heights, corner radii, borders and elevations
-- Exact state mapping for each component from source evidence
-- Tabs, dialogs, bottom sheets, palette cards and further component families
-- Component screenshot gallery in light and dark themes
-- Automated build verification and fixes from CI
-- Dependency/license review and public API documentation
+- Extract and verify actual color, typography, spacing, shape, outline and elevation values from source resources/screenshots
+- Replace provisional theme values only when supported by evidence
+- Exact state mapping and light/dark visual comparison for every component
+- Bottom-sheet and further component families
+- Showcase coverage for every component and state, including disabled/pressed/focused states
+- Reference screenshots and documented deviation list
+- CI result verification for current branch head
+- API usage examples, dependency/license review and tests
 
-### Important accuracy note
+### Accuracy note
 
-The initial tokens and component shapes are a functional starting point, not a claim of pixel-perfect Voyage parity. Tune them only after recording concrete reference measurements/screenshots. Demo controls intentionally do not trigger Voyage settings or system behavior.
+The components above are an implementation scaffold, not a claim of pixel-perfect Voyage parity. Tune them only after recording concrete reference measurements/screenshots. Demo controls intentionally do not trigger Voyage settings or system behavior.
