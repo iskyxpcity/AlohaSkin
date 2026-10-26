@@ -84,3 +84,11 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - Current theme mode, seed, palette style and contrast controls are local Showcase state. They do not persist settings or invoke Voyage functionality.
 - The source analysis previously established that Voyage uses MaterialKolor, reads Android 14+ contrast and animates color scheme changes. Exact Voyage version, style/default seed, contrast mapping and transition specification still need confirmation. AlohaSkin's complete scheme animation is not implemented in this pass.
 - Upstream implementation/API reference: MaterialKolor repository and its documented `rememberDynamicColorScheme` seed/style/contrast pathway. Dependency license is MIT; the library also incorporates Google's Apache-2.0 Material Color Utilities. License notices still need to be included in the final dependency audit.
+
+
+## Seed-palette color-scheme animation — 2026-10-26
+
+- Added the MaterialKolor 2.0.0 `DynamicMaterialTheme` path for custom seed palettes, with `animate = true` and the library-owned shared shape scale. This animates the full Material 3 color scheme rather than manually animating only a subset of colors.
+- The path applies when a custom seed is active and Android native dynamic colors are not selected. If Android 12+ native system dynamic colors are explicitly enabled, that native scheme remains the selected path; it is not wrapped in a custom animation yet.
+- The transition currently uses MaterialKolor's default spring specification. The analyzed Voyage code indicates animated scheme changes, but its exact animation spec has not yet been confirmed, so timing/easing parity remains unverified.
+- API reference for the pinned 2.0.0 line documents `DynamicMaterialTheme(... animate = true)`: citeturn1search0 (reference captured during this maintenance pass; verify against the pinned artifact if the dependency version changes).
