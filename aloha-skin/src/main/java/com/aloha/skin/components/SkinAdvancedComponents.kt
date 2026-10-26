@@ -31,21 +31,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.aloha.skin.theme.SkinElevation
+import com.aloha.skin.theme.SkinRadii
+import com.aloha.skin.theme.SkinSpacing
+import com.aloha.skin.theme.SkinStroke
 
 /** Surface/container primitive; dimensions and colors are themeable at the call site. */
 @Composable
 fun SkinSurface(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 20.dp,
+    cornerRadius: Dp = SkinRadii.card,
     outlined: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(cornerRadius),
-        border = if (outlined) BorderStroke(1.dp, MaterialTheme.colorScheme.outline) else null,
+        border = if (outlined) BorderStroke(SkinStroke.hairline, MaterialTheme.colorScheme.outline) else null,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = SkinElevation.flat)
     ) { content() }
 }
 
@@ -80,19 +84,19 @@ fun SkinPaletteCard(
 ) {
     Card(
         modifier = modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(SkinRadii.card),
         border = BorderStroke(
-            if (selected) 2.dp else 1.dp,
+            if (selected) SkinStroke.selected else SkinStroke.hairline,
             if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = .7f)
         ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(0.dp)
+        elevation = CardDefaults.cardElevation(SkinElevation.flat)
     ) {
-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(Modifier.padding(SkinSpacing.lg), verticalArrangement = Arrangement.spacedBy(SkinSpacing.md)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(SkinSpacing.xs)) {
                 colors.take(5).forEach { color ->
                     Box(
-                        Modifier.weight(1f).height(30.dp).clip(RoundedCornerShape(8.dp)).background(color)
+                        Modifier.weight(1f).height(30.dp).clip(RoundedCornerShape(SkinSpacing.sm)).background(color)
                     )
                 }
             }
@@ -116,7 +120,7 @@ fun SkinButtonPair(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(SkinSpacing.sm)) {
         Button(onClick = onPrimary, enabled = enabled, modifier = Modifier.weight(1f)) { Text(primaryLabel) }
         OutlinedButton(onClick = onSecondary, enabled = enabled, modifier = Modifier.weight(1f)) { Text(secondaryLabel) }
     }
@@ -157,11 +161,11 @@ fun SkinBottomSheet(
             onDismissRequest = onDismiss,
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+            shape = RoundedCornerShape(topStart = SkinRadii.sheetTop, topEnd = SkinRadii.sheetTop)
         ) {
-            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+            Column(Modifier.fillMaxWidth().padding(horizontal = SkinSpacing.xl, vertical = SkinSpacing.md)) {
                 content()
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(SkinSpacing.xl))
             }
         }
     }
