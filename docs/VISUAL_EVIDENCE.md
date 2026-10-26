@@ -55,7 +55,6 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - Group colors are derived from the active theme scheme and use 0.5f color blending in this method. This supports a scheme-relative treatment, not one fixed universal RGB value.
 - Implementation action: keep `SkinAccordion`'s rotation endpoints at 0°/180°; the currently selected easing/duration and container metrics remain provisional pending further call-site/helper inspection and screenshot comparison.
 
-
 ## Floating navigation / translucent surface — 2026-10-26
 
 - The decompiled theme settings route exposes a navigation-bar section, and prior inspection recorded floating navigation and a Liquid Glass-style option as visual concepts in the Voyage UI. This supports including a reusable navigation-surface primitive in the component inventory.
@@ -63,9 +62,15 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - No navigation destinations, route changes, settings persistence, or system behavior are imported. The host supplies each item's label, icon composable and click callback.
 - Verification status: implementation scaffolded; parity unverified. Do not label as 1:1 until reference screenshots and measurements are attached.
 
-
 ## Dynamic theme pathway — 2026-10-26
 
 - Prior APK static analysis recorded that Voyage uses Material 3 and MaterialKolor dynamic color infrastructure: the default dynamic path can use the Android system Material 3 scheme, while custom palette/seed paths use MaterialKolor; the analyzed path also reads system contrast on Android 14+ and animates color-scheme changes.
-- AlohaSkin now exposes an opt-in `dynamicColor` flag using Android's native dynamic Material 3 scheme on Android 12+; older versions and opt-out use the local fallback palette.
+- AlohaSkin exposes an opt-in `dynamicColor` flag using Android's native dynamic Material 3 scheme on Android 12+; older versions and opt-out use the local fallback palette.
+- The Showcase now has a switch to preview this dynamic palette branch. On older Android versions, enabling the switch intentionally falls back to the local scheme.
 - This implements only the native dynamic palette branch. Custom seed/palette generation, contrast adaptation, and animated scheme transitions remain pending until their source call sites and dependency requirements are reviewed. The fallback RGB values remain provisional and are not certified as Voyage's palette.
+
+## Shared design tokens — 2026-10-26
+
+- Added `SkinTokens.kt` to centralize provisional spacing, radius, stroke and elevation values and to expose a shared Material 3 shape scale through `AlohaSkinTheme`.
+- This is a maintainability step, **not** a source-derived measurement result. Existing component-level literal dimensions are not yet fully normalized to these tokens.
+- The values in `SkinSpacing`, `SkinRadii`, `SkinStroke`, `SkinElevation` and `SkinShapes` remain provisional. No Voyage reference screenshot or source style has yet certified them.
