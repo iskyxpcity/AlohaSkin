@@ -81,6 +81,7 @@ fun AlohaSkinTheme(
         seedColor != null -> rememberDynamicColorScheme(
             seedColor = seedColor,
             isDark = useDarkTheme,
+            isAmoled = false,
             style = paletteStyle,
             contrastLevel = resolvedContrast
         )
