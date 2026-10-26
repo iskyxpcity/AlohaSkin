@@ -536,3 +536,27 @@
 2. 下载匹配修复代码 SHA 的 APK，验证 ZIP、内部 APK 和 SHA-256。
 3. 视觉 1:1 尚未完成：Voyage 的 seed/style/contrast 精确默认值、动画参数、浅/深色参考截图尺寸、组件状态以及完整设置子项仍需证据核对。
 4. 完成全部依赖许可盘点、测试与无障碍检查后，再评估合并；当前不得合并 `main`。
+
+
+### K.018 — 2026-10-26：动画主题版构建成功并完成 APK 完整性校验
+
+**构建结果**
+- 修复提交 `71725fa864b3e15e1f65a89fccc318439b60e7ef`（`fix: use MaterialKolor 2.0 theme parameter names`）对应 GitHub Actions Run `40329490435` 已完成且成功，结论为 `success`。Library/Showcase 构建和 `Upload showcase APK` 步骤均成功。
+- Run 链接：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40329490435`。
+- Artifact ID：`12655175663`；名称 `AlohaSkin-Showcase-Debug-APK`。
+- Artifact ZIP 大小：`8,661,640 bytes`；ZIP SHA-256：`f00c28d90c71979d29f6c3e10aa4787356e795aa8c699ea9d2e48cf3cc17fac6`。
+- ZIP 内 APK：`showcase-debug.apk`，大小 `9,067,471 bytes`。已执行 ZIP 完整性检查，结果无错误；内部 APK 也通过 ZIP 完整性检查，文件识别为 Android package。
+- 已提取到本次工作环境：`/mnt/data/AlohaSkin_Showcase_Theme_Animated_20261026.apk`。
+- APK SHA-256：`b80d4694d34deea6ae47a2eb81b1593f92efc92135bb4b5d1362132c10afaf34`。
+- 这是可用于安装体验的 **debug Showcase APK**，不是已签名的 production/release APK。当前包包含种子色调色板、主题模式/对比度控制以及 MaterialKolor 2.0.0 完整 ColorScheme 动画接入。
+
+**修复确认**
+- 失败 run `40329133639` 的日志已明确指出 MaterialKolor 2.0.0 使用 `useDarkTheme` / `withAmoled` 参数。按固定版本源码修正后，Run `40329490435` 构建成功，未再复现该编译错误。
+- `THIRD_PARTY_NOTICES.md` 已添加 MaterialKolor MIT 和 Material Color Utilities Apache-2.0 的依赖来源说明。
+- `docs/IMPLEMENTATION_STATUS.md` 已更新，记录该 SHA 的成功构建和产物校验。
+
+**分支与后续**
+- 工作分支：`feature/voyage-visual-system-extraction-20261026`；`main` 未修改/未合并。
+- 维护记录提交之前的最新代码 SHA 为 `71725fa864b3e15e1f65a89fccc318439b60e7ef`；之后仅追加/更新文档，不改动已构建的应用源码。
+- 当前已经达到“可交付并可安装测试的 APK”这一阶段目标，APK 校验通过。
+- **Voyage 视觉 1:1 迁移仍未完成**：主题默认参数和动画时间规格、浅/深色截图逐项测量、组件尺寸/选中/禁用状态、设置子项完整转录、自动化/无障碍测试与完整依赖许可审计仍待完成。因此不可声称已达到像素级一致，也不可据此合并 `main`。
