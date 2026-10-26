@@ -456,3 +456,27 @@
 2. 最新代码成功后下载匹配 SHA 的 APK，核验 ZIP 完整性、内部 APK、文件大小和 SHA-256。
 3. 继续确认 MaterialKolor 的完整配色动画 API，并从 Voyage 主题调用点提取实际 style、seed、contrast 与动画规格。
 4. 继续逐项校准主题组件和设置层级，保持未测量参数为 provisional；不得宣称 1:1 已完成。
+
+
+### K.015 — 2026-10-26：将调色板风格类型收敛为库内公开 API
+
+**第二轮构建诊断**
+- 修复 `isAmoled` 后，Run `40328131318` 进入 Showcase 编译并再次失败。
+- 完整日志显示 `MainActivity.kt` 无法解析 `com.materialkolor.PaletteStyle`，原因是 MaterialKolor 仅作为 `aloha-skin` 的 implementation 依赖，未暴露给 Showcase；这也是组件库 API 不应要求调用方直接依赖实现库的设计问题。
+
+**修复**
+- 在 `SkinTheme.kt` 增加库自身的 `SkinPaletteStyle` 枚举：`TONAL_SPOT`、`EXPRESSIVE`、`VIBRANT`、`MONOCHROME`。
+- 由 AlohaSkin 内部把 `SkinPaletteStyle` 映射到 MaterialKolor 的 `PaletteStyle`，保持 MaterialKolor 为实现细节，避免 Showcase/下游应用直接依赖它。
+- Showcase 已切换到 `SkinPaletteStyle`，不再导入 MaterialKolor 类型。
+- 修复提交：`022d3e8f8d47af6ae74d0eaf6359b472cd836f9e`（`refactor: expose library-owned palette style API`）；`0d88e6d1f3eb59faf85fad2a1358a8d8f6d0cb2b`（`fix: use library palette style API in showcase`）。
+
+**构建状态**
+- 本条记录写入时，提交 `0d88e6d1f3eb59faf85fad2a1358a8d8f6d0cb2b` 对应 Run `40328459924` 仍处于 `in_progress`；前一个库 API 提交 Run `40328446504` 也仍在运行。
+- 修复前 Run `40328131318` 失败，因此没有生成匹配当前主题代码的 APK。必须等最新修复的 build 和 Upload showcase APK 都成功后再交付。
+- `main` 未修改/未合并；测试分支不变。
+
+**下一步**
+1. 核对 Run `40328459924` 最终结果；若仍失败，读取完整日志并继续修复。
+2. 成功后下载与最新代码 SHA 匹配的 artifact，检查 ZIP/APK 和 SHA-256。
+3. 继续核对 MaterialKolor 的动画 API 与 Voyage 原版调用点；实现完整 ColorScheme 动画前先确认版本/参数，不猜时长或曲线。
+4. 继续补齐 Voyage 设置页子选项的真实标签/层级，测量浅/深色截图与组件状态；目前仍未完成 1:1。
