@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             var darkPreview by remember { mutableStateOf(false) }
-            AlohaSkinTheme(darkTheme = darkPreview) {
+            var dynamicPreview by remember { mutableStateOf(false) }
+            AlohaSkinTheme(darkTheme = darkPreview, dynamicColor = dynamicPreview) {
                 var selectedMode by remember { mutableStateOf("System") }
                 var enabled by remember { mutableStateOf(true) }
                 var radius by remember { mutableFloatStateOf(24f) }
@@ -63,6 +64,11 @@ class MainActivity : ComponentActivity() {
                         SkinPreferenceRow("Dark preview", "Toggle the demo color scheme", trailing = {
                             androidx.compose.material3.Switch(darkPreview, { darkPreview = it })
                         })
+                        SkinPreferenceRow(
+                            "System dynamic colors",
+                            "Android 12+ only; uses device wallpaper palette",
+                            trailing = { androidx.compose.material3.Switch(dynamicPreview, { dynamicPreview = it }) }
+                        )
                         SkinChoiceChips(listOf("Light", "Dark", "System"), selectedMode, {
                             selectedMode = it
                             darkPreview = it == "Dark"
@@ -73,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         Text("Selected tab: ${listOf("Components", "Surfaces", "Palettes")[selectedTab]}", modifier = Modifier.padding(top = 12.dp))
                     }
                     SkinAccordion("DESIGN", expanded = true, onExpandedChange = {}) {
-                        SkinPreferenceRow("Dynamic color sample", "Local preview only", trailing = {
+                        SkinPreferenceRow("Sample controls enabled", "Demonstrates disabled-state styling", trailing = {
                             androidx.compose.material3.Switch(enabled, { enabled = it })
                         })
                         SkinChoiceChips(listOf("Tonal", "Expressive", "Neutral"), "Expressive", {})
