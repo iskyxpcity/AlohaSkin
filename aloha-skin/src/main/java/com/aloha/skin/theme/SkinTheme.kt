@@ -1,13 +1,17 @@
 package com.aloha.skin.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
-/** Semantic palette. Values are initial extraction tokens and must be calibrated against references. */
+/** Static fallback palette. Values remain provisional until calibrated against Voyage references. */
 object SkinColors {
     val LightBackground = Color(0xFFF7F7FA)
     val LightSurface = Color(0xFFFFFFFF)
@@ -25,31 +29,47 @@ object SkinColors {
     val DarkOutline = Color(0xFF45444F)
 }
 
+/**
+ * Applies AlohaSkin's semantic Material 3 theme.
+ *
+ * [dynamicColor] opts into Android's system dynamic palette on Android 12+.
+ * This is theme plumbing only; it does not persist user choices or import Voyage logic.
+ * A custom seed/palette generator is intentionally separate and remains future work.
+ */
 @Composable
 fun AlohaSkinTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val scheme = if (darkTheme) darkColorScheme(
-        primary = SkinColors.DarkAccent,
-        onPrimary = Color(0xFF30204F),
-        background = SkinColors.DarkBackground,
-        onBackground = SkinColors.DarkText,
-        surface = SkinColors.DarkSurface,
-        onSurface = SkinColors.DarkText,
-        surfaceVariant = SkinColors.DarkSurfaceVariant,
-        onSurfaceVariant = SkinColors.DarkSubtleText,
-        outline = SkinColors.DarkOutline
-    ) else lightColorScheme(
-        primary = SkinColors.LightAccent,
-        onPrimary = Color.White,
-        background = SkinColors.LightBackground,
-        onBackground = SkinColors.LightText,
-        surface = SkinColors.LightSurface,
-        onSurface = SkinColors.LightText,
-        surfaceVariant = SkinColors.LightSurfaceVariant,
-        onSurfaceVariant = SkinColors.LightSubtleText,
-        outline = SkinColors.LightOutline
-    )
+    val context = LocalContext.current
+    val scheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && darkTheme ->
+            dynamicDarkColorScheme(context)
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !darkTheme ->
+            dynamicLightColorScheme(context)
+        darkTheme -> darkColorScheme(
+            primary = SkinColors.DarkAccent,
+            onPrimary = Color(0xFF30204F),
+            background = SkinColors.DarkBackground,
+            onBackground = SkinColors.DarkText,
+            surface = SkinColors.DarkSurface,
+            onSurface = SkinColors.DarkText,
+            surfaceVariant = SkinColors.DarkSurfaceVariant,
+            onSurfaceVariant = SkinColors.DarkSubtleText,
+            outline = SkinColors.DarkOutline
+        )
+        else -> lightColorScheme(
+            primary = SkinColors.LightAccent,
+            onPrimary = Color.White,
+            background = SkinColors.LightBackground,
+            onBackground = SkinColors.LightText,
+            surface = SkinColors.LightSurface,
+            onSurface = SkinColors.LightText,
+            surfaceVariant = SkinColors.LightSurfaceVariant,
+            onSurfaceVariant = SkinColors.LightSubtleText,
+            outline = SkinColors.LightOutline
+        )
+    }
     MaterialTheme(colorScheme = scheme, content = content)
 }

@@ -62,3 +62,10 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - The exact shape, blur implementation, opacity, outline, elevation, item sizing and selected-state indicator have **not** yet been measured against a reference screenshot or confirmed from the actual Compose implementation. The current `SkinFloatingNavigationBar` uses a translucent surface, outline and selected container as a provisional visual scaffold only.
 - No navigation destinations, route changes, settings persistence, or system behavior are imported. The host supplies each item's label, icon composable and click callback.
 - Verification status: implementation scaffolded; parity unverified. Do not label as 1:1 until reference screenshots and measurements are attached.
+
+
+## Dynamic theme pathway — 2026-10-26
+
+- Prior APK static analysis recorded that Voyage uses Material 3 and MaterialKolor dynamic color infrastructure: the default dynamic path can use the Android system Material 3 scheme, while custom palette/seed paths use MaterialKolor; the analyzed path also reads system contrast on Android 14+ and animates color-scheme changes.
+- AlohaSkin now exposes an opt-in `dynamicColor` flag using Android's native dynamic Material 3 scheme on Android 12+; older versions and opt-out use the local fallback palette.
+- This implements only the native dynamic palette branch. Custom seed/palette generation, contrast adaptation, and animated scheme transitions remain pending until their source call sites and dependency requirements are reviewed. The fallback RGB values remain provisional and are not certified as Voyage's palette.

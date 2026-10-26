@@ -6,7 +6,8 @@ The repository contains a standalone Android Compose library module and a demo s
 
 ### Components implemented (visual parity not yet certified)
 
-- Semantic light/dark color schemes (provisional values)
+- Semantic light/dark color schemes (provisional fallback values)
+- Optional Android 12+ system dynamic Material 3 palette (opt-in)
 - Outlined rounded frame/container: `SkinFrame`
 - Generic surface/container primitive: `SkinSurface`
 - Expandable group with size animation and rotating disclosure glyph: `SkinAccordion`
@@ -26,8 +27,10 @@ The repository contains a standalone Android Compose library module and a demo s
 ### Still pending
 
 - Extract and verify actual color, typography, spacing, shape, outline and elevation values from Voyage resources/screenshots
+- Custom seed/palette generation and animated scheme transitions are not yet implemented; dependency and source-call-site review required
 - Replace provisional theme values only when supported by evidence
 - Exact state mapping and light/dark visual comparison for every component, including floating navigation
+- Choice chips and action buttons now accept an explicit disabled state; verify visual states and add accessibility semantics
 - More control variants, pressed/focused/disabled states and accessibility semantics
 - Calibrate floating/glass surface opacity, stroke, radius and elevation from source evidence/screenshots
 - Reference screenshots and documented deviation list

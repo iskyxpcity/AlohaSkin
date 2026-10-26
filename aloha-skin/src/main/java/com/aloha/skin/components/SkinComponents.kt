@@ -130,12 +130,13 @@ fun SkinActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    selected: Boolean = false
+    selected: Boolean = false,
+    enabled: Boolean = true
 ) {
     if (selected) {
-        Button(onClick = onClick, modifier = modifier) { Text(text) }
+        Button(onClick = onClick, enabled = enabled, modifier = modifier) { Text(text) }
     } else {
-        TextButton(onClick = onClick, modifier = modifier) { Text(text) }
+        TextButton(onClick = onClick, enabled = enabled, modifier = modifier) { Text(text) }
     }
 }
 
@@ -144,22 +145,23 @@ fun SkinChoiceChips(
     choices: List<String>,
     selected: String,
     onSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
         choices.forEach { choice ->
             val isSelected = choice == selected
             Card(
-                modifier = Modifier.clickable { onSelected(choice) },
+                modifier = Modifier.then(if (enabled) Modifier.clickable { onSelected(choice) } else Modifier),
                 shape = CircleShape,
-                border = BorderStroke(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+                border = BorderStroke(1.dp, (if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline).copy(alpha = if (enabled) 1f else .38f)),
                 colors = CardDefaults.cardColors(containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent),
                 elevation = CardDefaults.cardElevation(0.dp)
             ) {
                 Text(
                     choice,
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
-                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                    color = (if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface).copy(alpha = if (enabled) 1f else .38f),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
