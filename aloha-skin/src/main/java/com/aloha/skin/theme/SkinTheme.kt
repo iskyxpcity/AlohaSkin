@@ -11,6 +11,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 
@@ -84,6 +85,23 @@ fun AlohaSkinTheme(
         null
     }
     val resolvedContrast = (contrastLevel ?: systemContrast ?: 0.0).coerceIn(-1.0, 1.0)
+    val platformDynamicColorsAvailable = dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    // MaterialKolor owns the complete ColorScheme transition (including roles not manually listed).
+    // Its default spring spec is used; duration/easing are not claimed to match Voyage until measured.
+    if (!platformDynamicColorsAvailable && seedColor != null) {
+        DynamicMaterialTheme(
+            seedColor = seedColor,
+            isDark = useDarkTheme,
+            isAmoled = false,
+            style = paletteStyle.toMaterialKolorStyle(),
+            contrastLevel = resolvedContrast,
+            shapes = SkinShapes,
+            animate = true,
+            content = content
+        )
+        return
+    }
 
     val scheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && useDarkTheme ->
