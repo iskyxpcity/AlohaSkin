@@ -26,19 +26,26 @@ The repository contains a standalone Android Compose library module and a demo s
 - Floating navigation bar with selected/unselected items and optional translucent surface: `SkinFloatingNavigationBar`
 - Showcase demonstrates light/dark and dynamic palette switches, tabs, palette cards, switch/chip/slider states, buttons, dialog and sheet with local-only demo state.
 
+### Build verification
+
+- Source commit `ca7fc5e73b010649e809eef81955a86365d2c908` was built successfully by AlohaSkin CI Run #19: https://github.com/iskyxpcity/AlohaSkin/actions/runs/40323387206
+- Run #19 completed successfully, including both `:aloha-skin:assembleDebug` and `:showcase:assembleDebug`, and uploaded artifact `AlohaSkin-Showcase-Debug-APK`.
+- Artifact ID: `12650342383`; ZIP size: `8,366,076 bytes`; artifact SHA-256: `7af01710431e8e1caa097611131133cd7397c09f30f772594d182a670807bc9f`.
+- Extracted `showcase-debug.apk`: `8,772,559 bytes`; SHA-256: `26a4c2b1f11ddb0f08d4394a1ab8c5a656684d6aff9f547fd26a81f37796ff03`. ZIP integrity and APK ZIP structure checks passed.
+- This is an installable **debug Showcase APK**, not a signed production release and not proof of visual 1:1 parity.
+
 ### Still pending
 
 - Extract and verify actual color, typography, spacing, shape, outline and elevation values from Voyage resources/screenshots
 - Custom seed/palette generation, Android 14+ contrast adaptation and animated scheme transitions; dependency and source-call-site review required
 - Replace provisional theme values only when supported by evidence
 - Exact state mapping and light/dark visual comparison for every component, including floating navigation
-- Apply shared dimension tokens consistently to all components; existing component-level literals have not all been normalized yet
-- Choice chips and action buttons accept explicit disabled state; verify visual states and add accessibility semantics
+- Apply shared dimension tokens consistently to all components; component-level literals have not all been normalized yet
+- Verify choice chips/action buttons disabled-state appearance and add accessibility semantics
 - More control variants, pressed/focused/disabled states and accessibility semantics
 - Calibrate floating/glass surface opacity, stroke, radius, blur and elevation from source evidence/screenshots
 - Reference screenshots and documented deviation list
-- Verify latest CI run and archive the matching successful showcase APK
-- API usage examples, dependency/license review and tests
+- API usage examples, dependency/license review and automated tests
 
 ### Accuracy note
 
