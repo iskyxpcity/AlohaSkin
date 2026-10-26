@@ -20,5 +20,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
+    // MIT-licensed MaterialKolor palette generation; used only for visual theme colors.
+    implementation("com.materialkolor:material-kolor:2.0.0")
     implementation("androidx.compose.runtime:runtime")
 }
