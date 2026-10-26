@@ -394,3 +394,40 @@
 3. 继续补齐 Voyage 设置页面的真实子选项名称/顺序/层级与详情选项卡；当前仅八个分组标题有已记录的参考证据，子项仍是代表性视觉样例。
 4. 检查顶部页面选项与底部导航的无障碍语义、选中状态、屏幕 Insets 和小屏布局。
 5. 继续做浅/深/动态主题的逐层截图对照与尺寸/颜色/字体/形状/动效测量；验收前不宣称 1:1。
+
+
+### K.013 — 2026-10-26：推进 Voyage 主题引擎的种子配色与系统对比度
+
+**本次目标**
+继续向 Voyage 已观察到的 Material 3 + MaterialKolor 主题路径推进；本轮先补主题模式、种子色调色板、调色板风格与系统对比度，而不是把临时色值误报为已测量的原版值。
+
+**代码改动**
+- 新增依赖 `com.materialkolor:material-kolor:2.0.0`，用于从种子色生成 Material 3 主题方案。依赖公开说明为 MIT；其内含的 Material Color Utilities 另有 Apache-2.0 许可，最终依赖/许可审计仍需完成。
+- `AlohaSkinTheme` 新增 `SkinThemeMode.SYSTEM / LIGHT / DARK`；保留可选的旧 `darkTheme` 覆盖参数以兼容现有调用。
+- 主题方案优先级明确为：Android 12+ 系统动态配色开关 → 自定义种子色 + MaterialKolor → 临时静态回退色板。
+- 种子色调色板支持 Tonal Spot、Expressive、Vibrant、Monochrome；设置页加入 Violet、Ocean、Rose、Forest 四个本地预览种子。
+- Android 14+ 尝试读取 `UiModeManager.contrast` 并传入 MaterialKolor；设置页可在系统对比度与手动 -1..+1 对比度之间切换。
+- 设置页所有模式、种子色、风格和对比度状态仅保存在当前 Showcase 内存中，不接入 Voyage 持久化或业务行为。
+- 更新 `docs/IMPLEMENTATION_STATUS.md`、`docs/COMPONENT_INVENTORY.md` 和 `docs/VISUAL_EVIDENCE.md`，把已实现路径和未核验的 Voyage 默认值分开记录。
+
+**本轮提交**
+- `1bb72935e2e3a4e985cd8cbbfefc675742865b22` — `feat: add MaterialKolor seed palette engine`
+- `a4ae1baac4ddf30637629babe320712e3efc46c3` — `feat: add theme modes seed palettes and contrast adaptation`
+- `434cd11fa64d0caea91d701a5a1ce30f64f32e28` — `feat: expose theme modes seed styles and contrast controls`
+- 文档提交：`d7d43899064552a8287549698e05cad1df32cb66`、`1abe4649aaf0e2f5eec214b5eb3a5e3c7b6d9cf1`、`48739d04c2b9244ecce08b543bba192b4c88e3ed`。
+- 分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改/未合并。
+
+**构建状态**
+- 最新 Showcase 代码提交 `434cd11fa64d0caea91d701a5a1ce30f64f32e28` 对应 Run `40327864773`；本条记录开始写入时仍在运行。
+- 依赖提交 Run `40327784290` 与主题 API 提交 Run `40327807995` 当时也仍在运行，尚无最终结论。不能把早期页面框架构建成功视为本轮主题引擎已构建成功。
+- 最近已明确成功的前一阶段提交 `46860f97b75a19a64c982c13e77479c4932770f9` 对应 Run `40327023145`，结论 success，Artifact ID `12652031370`，ZIP 大小 `8,399,504 bytes`，SHA-256 `a7c1e240e20a94da358e12581a435f98b98f2916ea0bdc2f0d93f155c5d1270d`。该产物不含本条新增的 MaterialKolor 主题引擎，不能作为本轮最新 APK。
+- 本维护记录提交也会触发 CI；需继续检查最新 SHA 的最终构建和上传步骤，再决定是否交付 APK。
+
+**准确性边界与未完成项**
+1. 仍需验证当前 MaterialKolor 2.0.0 API 与项目 Compose/Kotlin 版本的实际编译兼容性；CI 若失败，读取完整 Gradle 日志并修复。
+2. 当前只实现种子色生成与系统对比度输入，尚未实现完整 Material 3 ColorScheme 的动画过渡；需先确认所用依赖的实际 API，再按 Voyage 源证据实现，不能随意猜测时长/曲线。
+3. Voyage 的准确 MaterialKolor 版本、PaletteStyle、默认种子、对比度读取/映射及过渡参数仍待回到反编译主题调用点核验。
+4. 静态回退色板、shape/spacing/stroke/elevation 令牌仍为 provisional；需要原版截图和源码定位逐项测量。
+5. 设置页八个分组的子项标签/层级目前仍有代表性样例，尚不是完整逐项转录。
+6. 完成浅/深色截图、交互/无障碍、依赖许可审计和最终构建验证后，才可讨论合并；此前保持测试分支。
+
