@@ -2,51 +2,52 @@
 
 ## Current implementation pass
 
-The repository contains a standalone Android Compose visual component library and a Showcase app with four persistent primary navigation destinations. The app now uses a shared page shell and a nested settings-gallery scaffold.
+AlohaSkin is a standalone Compose visual theme/component library with a four-page Showcase. Current work focuses on making the theme engine closer to Voyage's observed Material 3 + MaterialKolor pathway while keeping all controls local and visual-only.
 
-### Shared page shell and navigation
+### Shared page shell
 
-- A fixed global AlohaSkin title bar stays above the page content.
-- A themed 页面 option frame shows the four primary destinations; the floating bottom navigation remains the persistent navigation control.
-- Main content scrolls independently from the global title and bottom navigation.
-- 主页 is intentionally sparse/empty; the global title, page-option frame and bottom navigation remain present.
-- 功能 retains tabs for controls, surfaces and palettes, with local examples for controls, dialog and bottom sheet.
-- 状态栏 contains a static status-bar mock with local toggles for clock, network speed, Wi-Fi, mobile signal and battery. It does not read device telemetry or change Android's real status bar.
-- 设置 contains theme mode controls and eight expandable Voyage-reference section labels in the observed order: DESIGN, NAVIGATION_BAR, MODE, LAUNCH, ASSIST, SHAPE, COMPONENTS, SHADOWS. These are visual sample categories, not imported Voyage feature implementations.
-- Selecting a setting row opens a detail scaffold with tabs (options/style/details), nested level-two/three/deeper expandable options, local choice chips, switch/slider samples, and theme-derived color/surface samples.
-- All showcase state is in-memory and local. No Voyage persistence, business navigation, permissions, services, data models or system side effects are imported.
+- Fixed global AlohaSkin title bar.
+- Clickable themed page-option frame plus persistent floating bottom navigation.
+- Independently scrollable page content.
+- Home remains intentionally sparse; title, page frame and bottom navigation remain.
+- Features and Status Bar pages use the shared shell.
+- Settings page contains the observed eight expandable section labels in order: DESIGN, NAVIGATION_BAR, MODE, LAUNCH, ASSIST, SHAPE, COMPONENTS, SHADOWS. Nested detail pages demonstrate tabs and deeper visual options; most child labels remain representative samples, not a complete Voyage transcription.
 
-### Shared visual components implemented (visual parity not yet certified)
+### Theme engine now implemented
 
-- Semantic light/dark color schemes (provisional fallback values)
-- Optional Android 12+ system dynamic Material 3 palette
-- Shared provisional spacing, radius, stroke and elevation tokens in SkinTokens.kt
-- Shared Material 3 shape scale wired through AlohaSkinTheme
-- Outlined frame/container: SkinFrame
-- Generic surface/container: SkinSurface
-- Expandable group with animated disclosure affordance: SkinAccordion
-- Preference row with leading/trailing slots: SkinPreferenceRow
-- Switch row, action buttons, choice chips and slider row
-- Tabs, theme palette preview card, enabled/disabled button pair
-- Generic confirmation dialog and modal bottom sheet
+- `SkinThemeMode.SYSTEM / LIGHT / DARK`; system mode follows `isSystemInDarkTheme()`, while explicit modes override it.
+- Native Android 12+ system dynamic Material 3 color scheme remains an optional path.
+- MaterialKolor seed-based palette generation is wired into the shared `AlohaSkinTheme`.
+- Palette styles exposed in Showcase: Tonal Spot, Expressive, Vibrant and Monochrome.
+- Theme settings expose seed colors Violet, Ocean, Rose and Forest.
+- Android 14+ system contrast is read through `UiModeManager` when available; the Showcase can instead set a manual contrast level from -1 to +1.
+- Shared shape tokens and semantic Material 3 color scheme continue to reach every page and nested component.
+- These settings are local in-memory Showcase state only; no Voyage preference persistence or business behavior is imported.
+
+### Reusable component families
+
+- Outlined frame/container, generic surface, expandable group, preference row
+- Switch row, action buttons, choice chips, slider row
+- Tabs, palette preview card, enabled/disabled button pair
+- Generic dialog and modal bottom sheet
 - Floating navigation bar with selected/unselected states
 
-### Latest code update
+### Latest theme commits
 
-- Commit: 89b39755e9501f35e9c5548c35f546cfb71fb35e — feat: add shared page shell and nested theme settings showcase.
-- CI for this new commit must complete successfully before this updated APK is called a verified build or delivered as the latest build.
-- Prior verified four-page APK remains a valid artifact for the earlier commit only; it does not include the shared page shell or nested settings scaffold.
+- `1bb72935e2e3a4e985cd8cbbfefc675742865b22` — add MaterialKolor seed palette engine (CI pending at the time of this edit).
+- `a4ae1baac4ddf30637629babe320712e3efc46c3` — add system/light/dark modes, seed palettes and contrast adaptation (CI pending at the time of this edit).
+- `434cd11fa64d0caea91d701a5a1ce30f64f32e28` — expose mode/seed/style/contrast controls in Showcase (CI result pending).
 
 ### Still pending
 
-- Verify latest CI and obtain an artifact built from the matching latest code commit.
-- Make the page-option frame interactive as a second way to change top-level page, and check its focus/semantics.
-- Populate setting rows from a fuller, source-verified Voyage settings inventory; the current eight group labels are verified composition references but the option names beneath them are representative visual samples, not a complete transcription.
-- Extract and verify actual color, typography, spacing, shape, outline, elevation and motion values from Voyage source/resources/screenshots.
-- Custom seed/palette generation, Android 14+ contrast adaptation and animated scheme transitions.
-- Screenshot comparison in light/dark themes for all levels and component states.
-- Normalize remaining component literals, improve accessibility, add automated UI tests, and complete dependency/license review.
+- Verify CI for all theme commits and produce a matching APK artifact from the newest code SHA.
+- Animate the complete Material 3 color scheme between modes/seeds using a verified API and source-matched timing/easing.
+- Confirm Voyage's precise MaterialKolor version, palette style, seed default, contrast default and Android 14+ contrast mapping from its theme call site.
+- Normalize component-level dimensions to shared tokens.
+- Complete source-verified settings labels and detail hierarchy.
+- Compare light/dark screenshots and measure actual page inset, row height, typography, shape, outline, elevation and motion.
+- Add automated tests, accessibility semantics, and dependency/license documentation.
 
 ### Accuracy note
 
-This is a reusable visual scaffold, not a claim of pixel-perfect Voyage parity. The nested options demonstrate UI depth and local interaction only. The exact Voyage labels, detail hierarchy and measurements still require source/screenshot verification. Theme tokens remain provisional.
+This is progress toward the observed theme architecture, not a declaration of pixel-perfect Voyage parity. Static fallback colors and shape/spacing tokens remain provisional until source/screenshot measurements confirm them. No production APK is claimed until the latest code commit's CI and artifact are verified.
