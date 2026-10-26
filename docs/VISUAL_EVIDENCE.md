@@ -46,3 +46,11 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - The same resource archive contains numerous third-party/library colors and dimensions (AndroidX, Material, ads SDKs, widgets). Generic values such as `design_tab_text_size=14sp` or `glance_component_square_icon_button_corners=16dp` are library-scoped and not proof of Voyage's actual Compose settings component measurements.
 - The APK includes dynamic Material theme code from MaterialKolor. This supports that the app has dynamic color-scheme infrastructure, but exact seed/style/contrast defaults must be extracted from the actual theme call site before porting values.
 - Result: no main-app Compose spacing/radius/color values are certified from this resource pass yet. The current AlohaSkin values remain provisional. This avoids mistaking embedded dependency defaults for Voyage UI measurements.
+
+## Expandable-group source inspection — 2026-10-26
+
+- In decompiled `p000/vfw0.java`, method `m137940Oo` (around lines 768–920 in the extracted file) contains the expandable-group rendering path.
+- The disclosure rotation target is explicitly `180.0f` when expanded and `0.0f` when collapsed. The exact animation spec is delegated to a helper and is not yet confirmed; do not guess duration/easing.
+- The body/container path includes a helper invocation with `8.0f` (`fqr.lOo(wgzVar, 8.0f)`). Treat this as a candidate 8dp inset only after confirming the helper's meaning; do not yet apply it as a certified page-wide spacing token.
+- Group colors are derived from the active theme scheme and use 0.5f color blending in this method. This supports a scheme-relative treatment, not one fixed universal RGB value.
+- Implementation action: keep `SkinAccordion`'s rotation endpoints at 0°/180°; the currently selected easing/duration and container metrics remain provisional pending further call-site/helper inspection and screenshot comparison.
