@@ -39,3 +39,10 @@ Record measurements only after extracting them from resource dimensions/styles o
 ## Rule
 
 Do not replace TBD with guessed values. The initial Compose token values are scaffolding and must remain labelled provisional until verified.
+
+## Resource audit added 2026-10-26
+
+- `decompiled/resources/res/values/colors.xml` includes `glance_colorPrimary=#ff6750a4`, `glance_colorPrimaryContainer=#ffeaddff`, `glance_colorOnPrimaryContainer=#ff21005d`, `glance_colorSurface=#fffffbfe`, `glance_colorSurfaceVariant=#ffe7e0ec`, and `glance_colorOutline=#ff79747e`. These are explicitly named `glance_color*` resources, so they are evidence for the Glance/widget palette only; they must **not** be assumed to be the main Compose app theme without corroborating Compose theme evidence.
+- The same resource archive contains numerous third-party/library colors and dimensions (AndroidX, Material, ads SDKs, widgets). Generic values such as `design_tab_text_size=14sp` or `glance_component_square_icon_button_corners=16dp` are library-scoped and not proof of Voyage's actual Compose settings component measurements.
+- The APK includes dynamic Material theme code from MaterialKolor. This supports that the app has dynamic color-scheme infrastructure, but exact seed/style/contrast defaults must be extracted from the actual theme call site before porting values.
+- Result: no main-app Compose spacing/radius/color values are certified from this resource pass yet. The current AlohaSkin values remain provisional. This avoids mistaking embedded dependency defaults for Voyage UI measurements.

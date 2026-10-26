@@ -107,3 +107,31 @@
 **下次续作要求**
 - 先完整阅读本文件；接着处理当前 CI 结果和原版视觉证据核对；结束时继续追加 K.003，不改写 K.001/K.002。
 
+### K.003 — 2026-10-26：补齐组件外壳并审计资源证据
+
+**本次执行**
+- 在 `SkinPreferenceRow` 中加入可选 leading slot，使图标/前导内容可由调用方提供；不绑定具体业务。
+- 新增 `SkinBottomSheet` 通用 ModalBottomSheet 外壳，内容和显隐状态由调用方传入。
+- Showcase 增加 Dialog 与 Bottom Sheet 交互样例；只控制本地展示状态。
+- 对反编译资源包的 `colors.xml`、`dimens.xml` 做初步分类，新增资源证据审计：明确 `glance_color*` 属于 Glance/widget 资源，第三方库的通用 dimens 不能直接视为 Voyage 主 Compose 页面参数。没有把不相关资源硬套进主题令牌。
+
+**代码提交**
+- 组件提交：`8cf5490503c2a3bf50ed6f49bfa683a4a6f8e675`（leading slot + bottom sheet）。
+- Showcase 提交：`001b344e19acac783e87a86fcd73fb111d1c514f`（Dialog/Sheet 展示）。
+- 本条维护记录和资源审计随本次提交追加；仍在测试分支，`main` 未修改/合并。
+
+**构建状态**
+- 组件扩展提交 `cb7da3b3ec9cf48e71159221cf27e794eb65ed6a` 的 CI Run `40314648720` 已成功。
+- 后续加入 Bottom Sheet 和 Showcase 的 Runs `40315029975`、`40315169689` 在写入本条时仍处于 `in_progress`，没有最终结论。不能把早期成功构建等同于最新 HEAD 构建通过。
+- Run `40315169689`：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40315169689`。
+
+**尚未完成**
+1. 继续取得最新 CI 结果；失败则读日志、修复并重新构建。
+2. 从真正的 Compose 主题调用点和组件实现中继续提取可验证参数；不把 Glance/第三方库资源当作主题证据。
+3. 对每个组件补齐浅色/深色截图、选中/未选中、启用/禁用、按压/焦点状态和尺寸偏差。
+4. 完善底部导航/玻璃表面等组件（只在源码证据足够时实现），补充测试与 API 示例。
+5. 完成许可/依赖审查和独立库交付验证。
+
+**下次续作**
+- 先完整阅读本记录，先处理上述 CI Runs 的最终结果；随后继续源证据核验与组件视觉校准，并追加 K.004。
+
