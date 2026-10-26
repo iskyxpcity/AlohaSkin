@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aloha.skin.components.SkinAccordion
 import com.aloha.skin.components.SkinButtonPair
+import com.aloha.skin.components.SkinBottomSheet
+import com.aloha.skin.components.SkinDialog
 import com.aloha.skin.components.SkinChoiceChips
 import com.aloha.skin.components.SkinFrame
 import com.aloha.skin.components.SkinPaletteCard
@@ -46,6 +48,8 @@ class MainActivity : ComponentActivity() {
                 var radius by remember { mutableFloatStateOf(24f) }
                 var selectedTab by remember { mutableIntStateOf(0) }
                 var selectedPalette by remember { mutableIntStateOf(0) }
+                var showSheet by remember { mutableStateOf(false) }
+                var showDialog by remember { mutableStateOf(false) }
                 Column(
                     Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -77,12 +81,17 @@ class MainActivity : ComponentActivity() {
                         SkinPreferenceRow("Preference row", "Supporting text and trailing action", trailing = {
                             Text("›", style = MaterialTheme.typography.titleLarge)
                         })
-                        SkinButtonPair("Primary", "Outlined", {}, {}, enabled = enabled)
+                        SkinButtonPair("Open sheet", "Open dialog", { showSheet = true }, { showDialog = true }, enabled = enabled)
                     }
                     SkinFrame(title = "Theme palette previews") {
                         SkinPaletteCard("Violet", listOf(SkinColors.LightAccent, Color(0xFF8A80B8), Color(0xFFB9B0D8), Color(0xFFE4DFF2)), selectedPalette == 0, { selectedPalette = 0 }, Modifier.fillMaxWidth())
                         Spacer(Modifier.height(10.dp))
                         SkinPaletteCard("Ocean", listOf(Color(0xFF245B78), Color(0xFF4D879F), Color(0xFF8AB6C5), Color(0xFFD7E8ED)), selectedPalette == 1, { selectedPalette = 1 }, Modifier.fillMaxWidth())
+                    }
+                    SkinDialog(visible = showDialog, title = "Dialog sample", body = "A generic presentation shell with caller-controlled state.", onConfirm = { showDialog = false }, onDismiss = { showDialog = false })
+                    SkinBottomSheet(visible = showSheet, onDismiss = { showSheet = false }) {
+                        Text("Bottom sheet sample", style = MaterialTheme.typography.titleLarge)
+                        Text("Content is supplied by the host; no Voyage behavior is included.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Spacer(Modifier.height(8.dp))
                 }

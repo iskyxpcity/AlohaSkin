@@ -1,6 +1,6 @@
 # Visual Component Inventory
 
-This is an evidence-based inventory. No component is marked complete until its appearance and states have been implemented and compared against reference evidence.
+No component is marked complete until its appearance and states have been implemented and compared against reference evidence.
 
 ## Theme and surface system
 
@@ -23,12 +23,12 @@ This is an evidence-based inventory. No component is marked complete until its a
 | Button | Selected/unselected, pressed, disabled, tonal/outlined/filled variants where evidenced | Initial selected/action and enabled/disabled button pair |
 | Switch | On/off, enabled/disabled | Material switch row scaffolded; state visual verification pending |
 | Slider | Track, thumb, active/inactive segments, enabled/disabled | Slider row scaffolded; state visual verification pending |
-| Preference/settings row | Leading icon, title, subtitle, trailing control/arrow | Text/subtitle/trailing slot implemented; leading slot pending |
+| Preference/settings row | Leading icon, title, subtitle, trailing control/arrow | Leading/trailing slots implemented; exact layout pending |
 | Expandable group | Collapsed/expanded, arrow rotation, nested content spacing | Initial implementation present; exact visual match pending |
 | Tabs | Selected/unselected indicator and text treatment | `SkinTabs` scaffolded |
 | Chips/selectors | Selected/unselected and disabled | Choice chips scaffolded; disabled state pending |
-| Dialogs | Surface, title/body hierarchy, actions | `SkinDialog` scaffolded |
-| Bottom sheets | Shape, handle, surface and insets | Pending |
+| Dialogs | Surface, title/body hierarchy, actions | `SkinDialog` scaffolded and shown in demo |
+| Bottom sheets | Shape, handle, surface and insets | `SkinBottomSheet` scaffolded and shown in demo |
 | Theme palette/scheme cards | Preview swatches, selection outline and editor presentation | `SkinPaletteCard` scaffolded |
 | Navigation surface | Floating bar and glass-like surface appearance where supported | Pending |
 
