@@ -431,3 +431,28 @@
 5. 设置页八个分组的子项标签/层级目前仍有代表性样例，尚不是完整逐项转录。
 6. 完成浅/深色截图、交互/无障碍、依赖许可审计和最终构建验证后，才可讨论合并；此前保持测试分支。
 
+
+
+### K.014 — 2026-10-26：修复 MaterialKolor API 参数并等待重建验证
+
+**失败诊断**
+- 主题模式/对比度提交 `a4ae1baac4ddf30637629babe320712e3efc46c3` 的 Run `40327807995` 失败。
+- 读取完整 Actions job log 后确认：MaterialKolor 2.0.0 的 `rememberDynamicColorScheme` 重载要求显式提供 `isAmoled`，当前调用未提供该必需参数，导致 `SkinTheme.kt:81` Kotlin 编译失败。
+- Showcase 主题控制提交 `434cd11fa64d0caea91d701a5a1ce30f64f32e28` 的 Run `40327864773` 同样因该问题失败，未产生可交付 APK。
+
+**修复**
+- 在 MaterialKolor 种子色方案调用中显式加入 `isAmoled = false`，避免将 AMOLED 黑底误作 Voyage 的默认主题行为。
+- 修复提交：`3eeaeea177b296a6a565995ab9f93e51820a40bb`（`fix: provide MaterialKolor AMOLED argument`）。
+- 依赖单独加入的提交 `1bb72935e2e3a4e985cd8cbbfefc675742865b22` 对应 Run `40327784290` 已成功，说明 MaterialKolor 2.0.0 依赖可解析；但主题 Kotlin 编译仍须以修复后的 Run 为准。
+
+**当前构建状态**
+- 修复提交对应 Run `40328131318`：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40328131318`，本条写入时仍为 `in_progress`。
+- 不宣称修复后的主题已构建成功；不交付前一阶段 APK 作为最新主题版。
+- 最近成功且可验证的前一阶段仍是页面框架提交 `46860f97b75a19a64c982c13e77479c4932770f9` 的 Run `40327023145`，Artifact ID `12652031370`；该 APK 不包含本轮 MaterialKolor 种子配色与对比度功能。
+- 工作分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改/未合并。
+
+**后续**
+1. 检查 Run `40328131318` 的最终构建结果；若失败继续读取完整日志、修复并重跑。
+2. 最新代码成功后下载匹配 SHA 的 APK，核验 ZIP 完整性、内部 APK、文件大小和 SHA-256。
+3. 继续确认 MaterialKolor 的完整配色动画 API，并从 Voyage 主题调用点提取实际 style、seed、contrast 与动画规格。
+4. 继续逐项校准主题组件和设置层级，保持未测量参数为 provisional；不得宣称 1:1 已完成。
