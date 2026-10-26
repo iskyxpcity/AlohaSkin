@@ -480,3 +480,36 @@
 2. 成功后下载与最新代码 SHA 匹配的 artifact，检查 ZIP/APK 和 SHA-256。
 3. 继续核对 MaterialKolor 的动画 API 与 Voyage 原版调用点；实现完整 ColorScheme 动画前先确认版本/参数，不猜时长或曲线。
 4. 继续补齐 Voyage 设置页子选项的真实标签/层级，测量浅/深色截图与组件状态；目前仍未完成 1:1。
+
+
+### K.016 — 2026-10-26：完成种子色方案动画接入并验证阶段性 APK
+
+**本轮工作**
+- 先核对最新维护记录 K.015 和 GitHub Actions 结果，没有修改或合并 `main`。
+- 已确认提交 `0d88e6d1f3eb59faf85fad2a1358a8d8f6d0cb2b` 的 Run `40328459924` 成功，library/showcase build 与 APK 上传步骤均成功。
+- 下载该 run 的 Artifact ID `12652476924`，ZIP 大小 `8,660,937 bytes`，Artifact SHA-256 为 `af75ef83b205c3535e1084254c641f4848d5dd253cd2c760e726925cf8870fec`。ZIP 内包含 `showcase-debug.apk`，大小 `9,067,471 bytes`；ZIP 测试通过，APK 自身 ZIP 完整性检查通过。提取 APK 的 SHA-256：`eb4f1dc9deadecdaa6ae950d5716a30c0a0ea090801f0211ae13dd336324b1da`。该 APK 是可安装的阶段性 Showcase 构建，但不包含本节新增的动画改动，不能冒充动画版最终产物。
+- 根据 MaterialKolor 2.0.0 的版本文档，使用库提供的 `DynamicMaterialTheme(animate = true)` 为自定义种子色路径接入完整 Material 3 ColorScheme 动画，并传入 AlohaSkin 的共享 shape tokens。当前使用 MaterialKolor 默认 spring；Voyage 的准确动画时长/曲线仍未证实，因此不声称动效像素级一致。
+- 当 Android 12+ 原生系统动态配色被显式启用时，仍走系统动态配色分支；该分支暂未套用自定义动画包装。
+- 更新 `docs/IMPLEMENTATION_STATUS.md` 与 `docs/VISUAL_EVIDENCE.md`，记录动画覆盖范围、未验证边界及依赖 API 证据。
+
+**新增代码与文档提交**
+- 代码：`b8f0a3785bd1ef23b6244fd659b689dee3a89b8e` — `feat: animate generated seed theme transitions`。
+- 状态文档：`0041a30a4b55248a24bbacb38bd1926e035a948b` — `docs: track seed theme animation implementation`。
+- 视觉证据：`f5cb9b2b23e2851d386613bd3d5cc73c16d6ec6b` — `docs: record seed palette animation evidence`。
+- 本维护记录追加后另行提交。分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改/未合并。
+
+**当前构建状态**
+- 动画代码提交 Run `40329133639` 在写入本条时为 `in_progress`。
+- 文档提交 Run `40329168534` 在写入本条时为 `in_progress`。
+- 以上两个 run 尚未有最终结论；必须继续检查最新 HEAD 对应的 build 与 artifact upload，失败时读取日志修复并重建。
+- 已成功并完成完整性核验的阶段性 APK 下载文件：`/mnt/data/AlohaSkin_Showcase_Debug_20261026.apk`。APK SHA-256：`eb4f1dc9deadecdaa6ae950d5716a30c0a0ea090801f0211ae13dd336324b1da`。它对应 SHA `0d88e6d1...`，不是本轮动画代码 SHA。
+
+**仍未完成，不能宣称 1:1**
+1. 等待并验证动画代码最新 SHA 对应的 CI 及 APK artifact；如失败需修复到成功。
+2. 完整核对 Voyage 主题调用点中的 MaterialKolor 版本、默认 seed/style、contrast 映射和动画规格；现有动画只实现了机制，未确认与原版参数相同。
+3. 补齐八个设置分组下的真实子项标签、顺序和深层页面结构；目前仍有代表性样例。
+4. 对浅色/深色参考图逐组件测量页面 inset、行高、字体、圆角、outline、elevation、选中/禁用状态和动效偏差。
+5. 完成自动化/无障碍测试及依赖许可审计，确认最终可交付包后再评估合并；目前禁止合并 `main`。
+
+**下次续作**
+- 先检查 Run `40329133639` 与 `40329168534`，以最新代码 SHA 为准；修复任何构建错误，下载并校验对应 APK，再继续视觉证据校准与许可/测试收尾。
