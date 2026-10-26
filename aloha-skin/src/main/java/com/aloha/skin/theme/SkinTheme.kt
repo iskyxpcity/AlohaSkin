@@ -19,6 +19,18 @@ enum class SkinThemeMode {
     SYSTEM, LIGHT, DARK
 }
 
+/** Stable library-owned palette options; keeps MaterialKolor as an implementation detail. */
+enum class SkinPaletteStyle {
+    TONAL_SPOT, EXPRESSIVE, VIBRANT, MONOCHROME
+}
+
+private fun SkinPaletteStyle.toMaterialKolorStyle(): PaletteStyle = when (this) {
+    SkinPaletteStyle.TONAL_SPOT -> PaletteStyle.TonalSpot
+    SkinPaletteStyle.EXPRESSIVE -> PaletteStyle.Expressive
+    SkinPaletteStyle.VIBRANT -> PaletteStyle.Vibrant
+    SkinPaletteStyle.MONOCHROME -> PaletteStyle.Monochrome
+}
+
 /** Static fallback palette. Values remain provisional until calibrated against Voyage references. */
 object SkinColors {
     val LightBackground = Color(0xFFF7F7FA)
@@ -53,7 +65,7 @@ fun AlohaSkinTheme(
     dynamicColor: Boolean = false,
     themeMode: SkinThemeMode = SkinThemeMode.SYSTEM,
     seedColor: Color? = null,
-    paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
+    paletteStyle: SkinPaletteStyle = SkinPaletteStyle.TONAL_SPOT,
     contrastLevel: Double? = null,
     content: @Composable () -> Unit
 ) {
@@ -82,7 +94,7 @@ fun AlohaSkinTheme(
             seedColor = seedColor,
             isDark = useDarkTheme,
             isAmoled = false,
-            style = paletteStyle,
+            style = paletteStyle.toMaterialKolorStyle(),
             contrastLevel = resolvedContrast
         )
         useDarkTheme -> darkColorScheme(
