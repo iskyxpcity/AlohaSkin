@@ -206,3 +206,39 @@
 3. 继续核对 Voyage 真实主题调用点，评估 MaterialKolor 依赖、系统对比度与色彩过渡的纯视觉实现。
 4. 建立浅/深色、选中/未选中、禁用状态截图对照；当前尚无像素级 1:1 认证。
 5. 后续继续追加 K.007，不覆盖此前历史。
+
+
+### K.007 — 2026-10-26：集中视觉令牌并接入动态配色预览
+
+**本次执行**
+- 继续前已完整读取本维护总记录，并核验当前分支和上一轮 CI。
+- 新增 `aloha-skin/src/main/java/com/aloha/skin/theme/SkinTokens.kt`，集中定义 provisional spacing、radii、stroke、elevation 与 Material 3 `Shapes`；`AlohaSkinTheme` 现已统一应用 `SkinShapes`。
+- Showcase 增加系统动态配色开关，直接验证 `AlohaSkinTheme(dynamicColor = ...)` 路径；同时把原来误命名为动态配色样例、实际只控制 Demo 控件启用状态的开关改成“Sample controls enabled”。
+- 更新 `docs/IMPLEMENTATION_STATUS.md` 与 `docs/VISUAL_EVIDENCE.md`，明确令牌是集中管理，不代表已完成 Voyage 测量；组件中仍有未统一的字面尺寸。
+- 所有改动继续只涉及主题视觉与 Showcase 本地状态，不导入 Voyage 的业务功能、持久化、导航或系统副作用。
+
+**本轮提交**
+- `39e2a1c41254f896436d0c4bb1f5b41c63255529` — `feat: centralize provisional visual design tokens`
+- `b4bbdf4a88bb4674d272a6b6c183a60259a00d7c` — `refactor: apply shared skin shape tokens`
+- `08bdc92d9f4f3a87709fb384686eecb129cd1353` — `feat: expose dynamic palette in showcase`
+- `7185e01b269f98ce2e6f16cab3fb3534754728a0` — `docs: track shared tokens and dynamic palette preview`
+- `eff47987503ae715f1f82c10dc61f2f17042e0d6` — `docs: record shared tokens and dynamic preview evidence`
+- 分支仍为 `feature/voyage-visual-system-extraction-20261026`；`main` 未修改、未合并。
+- 历史 K.005 曾留下“提交 SHA 后续填写”的占位文字；此处保留历史原文，并通过本条补记：K.005 导航代码提交实际为 `bcc41fe45e16e6b91a67f0f336308c008b812365`，其后动态配色/禁用态提交为 `650f8c8022a88efe1b029121e54a4ba6529597f5`。
+
+**CI 与测试 APK**
+- Run #11 `40322277172` 对应提交 `650f8c8022a88efe1b029121e54a4ba6529597f5` 已完成且成功；Build library and showcase、Upload showcase APK 两步均成功。
+- Run #11 Artifact ID `12649627278`，名称 `AlohaSkin-Showcase-Debug-APK`，大小 `8,361,971 bytes`，ZIP digest `sha256:2b4925624e3d08e09055f3bd490f643a087eb0632f171e2945d152ec93a780cc`；链接：`https://github.com/iskyxpcity/AlohaSkin/actions/runs/40322277172`。
+- Run #11 APK 是提交 `650f8c8` 的调试展示版，不包含 K.007 的新令牌/展示修改，不能作为当前 HEAD 的最终交付。
+- 当前新代码触发的 Run #14 `40323068240`（提交 `08bdc92d9f4f3a87709fb384686eecb129cd1353`）与 Run #15 `40323108507`（提交 `7185e01b269f98ce2e6f16cab3fb3534754728a0`）在追加本条前观察时仍为 `in_progress`；须继续核对，不得推断为成功。
+- 本维护记录提交会触发新的 CI；最终状态和最新 artifact 由后续维护记录补记。
+
+**未完成事项**
+1. 确认 Run #14/#15 和本条记录提交所触发 CI 的最终结果；失败时读取日志、修复并重跑。
+2. 取得当前 HEAD 对应的 APK artifact，并确认上传步骤成功；之前的 artifact 不可替代当前构建。
+3. 继续审计 Voyage 主题调用点、MaterialKolor 自定义 palette/seed、Android 14+ 对比度适配和配色动画。
+4. 建立真实浅/深色参考截图与 Showcase 截图的测量/偏差表；未测值继续标记 provisional，不能宣称 1:1。
+5. 完善组件状态、无障碍语义、测试、API 使用说明和依赖/许可审查；最后再做完整交付验收。
+
+**下次续作**
+- 先完整读取本记录，优先处理所有最新 CI 结果并拿到与当前 HEAD 对应的 APK，然后继续实现与验证；追加 K.008，不覆盖历史。
