@@ -54,3 +54,11 @@ Do not replace TBD with guessed values. The initial Compose token values are sca
 - The body/container path includes a helper invocation with `8.0f` (`fqr.lOo(wgzVar, 8.0f)`). Treat this as a candidate 8dp inset only after confirming the helper's meaning; do not yet apply it as a certified page-wide spacing token.
 - Group colors are derived from the active theme scheme and use 0.5f color blending in this method. This supports a scheme-relative treatment, not one fixed universal RGB value.
 - Implementation action: keep `SkinAccordion`'s rotation endpoints at 0°/180°; the currently selected easing/duration and container metrics remain provisional pending further call-site/helper inspection and screenshot comparison.
+
+
+## Floating navigation / translucent surface — 2026-10-26
+
+- The decompiled theme settings route exposes a navigation-bar section, and prior inspection recorded floating navigation and a Liquid Glass-style option as visual concepts in the Voyage UI. This supports including a reusable navigation-surface primitive in the component inventory.
+- The exact shape, blur implementation, opacity, outline, elevation, item sizing and selected-state indicator have **not** yet been measured against a reference screenshot or confirmed from the actual Compose implementation. The current `SkinFloatingNavigationBar` uses a translucent surface, outline and selected container as a provisional visual scaffold only.
+- No navigation destinations, route changes, settings persistence, or system behavior are imported. The host supplies each item's label, icon composable and click callback.
+- Verification status: implementation scaffolded; parity unverified. Do not label as 1:1 until reference screenshots and measurements are attached.

@@ -28,6 +28,8 @@ import com.aloha.skin.components.SkinButtonPair
 import com.aloha.skin.components.SkinBottomSheet
 import com.aloha.skin.components.SkinDialog
 import com.aloha.skin.components.SkinChoiceChips
+import com.aloha.skin.components.SkinFloatingNavigationBar
+import com.aloha.skin.components.SkinNavigationItem
 import com.aloha.skin.components.SkinFrame
 import com.aloha.skin.components.SkinPaletteCard
 import com.aloha.skin.components.SkinPreferenceRow
@@ -48,6 +50,7 @@ class MainActivity : ComponentActivity() {
                 var radius by remember { mutableFloatStateOf(24f) }
                 var selectedTab by remember { mutableIntStateOf(0) }
                 var selectedPalette by remember { mutableIntStateOf(0) }
+                var selectedNavigation by remember { mutableIntStateOf(0) }
                 var showSheet by remember { mutableStateOf(false) }
                 var showDialog by remember { mutableStateOf(false) }
                 Column(
@@ -82,6 +85,15 @@ class MainActivity : ComponentActivity() {
                             Text("›", style = MaterialTheme.typography.titleLarge)
                         })
                         SkinButtonPair("Open sheet", "Open dialog", { showSheet = true }, { showDialog = true }, enabled = enabled)
+                    }
+                    SkinFrame(title = "Floating navigation / glass surface") {
+                        SkinFloatingNavigationBar(
+                            items = listOf(
+                                SkinNavigationItem("Home", selectedNavigation == 0, { selectedNavigation = 0 }) { Text("⌂") },
+                                SkinNavigationItem("Style", selectedNavigation == 1, { selectedNavigation = 1 }) { Text("◈") },
+                                SkinNavigationItem("About", selectedNavigation == 2, { selectedNavigation = 2 }) { Text("⋯") }
+                            )
+                        )
                     }
                     SkinFrame(title = "Theme palette previews") {
                         SkinPaletteCard("Violet", listOf(SkinColors.LightAccent, Color(0xFF8A80B8), Color(0xFFB9B0D8), Color(0xFFE4DFF2)), selectedPalette == 0, { selectedPalette = 0 }, Modifier.fillMaxWidth())

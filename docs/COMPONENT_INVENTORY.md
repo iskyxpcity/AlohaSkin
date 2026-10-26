@@ -30,7 +30,7 @@ No component is marked complete until its appearance and states have been implem
 | Dialogs | Surface, title/body hierarchy, actions | `SkinDialog` scaffolded and shown in demo |
 | Bottom sheets | Shape, handle, surface and insets | `SkinBottomSheet` scaffolded and shown in demo |
 | Theme palette/scheme cards | Preview swatches, selection outline and editor presentation | `SkinPaletteCard` scaffolded |
-| Navigation surface | Floating bar and glass-like surface appearance where supported | Pending |
+| Navigation surface | Floating bar and glass-like surface appearance where supported | `SkinFloatingNavigationBar` scaffolded; dimensions, translucency and state style pending visual verification |
 
 ## Known theme-settings composition reference
 

@@ -20,14 +20,16 @@ The repository contains a standalone Android Compose library module and a demo s
 - Enabled/disabled primary and outlined button pair: `SkinButtonPair`
 - Generic confirmation dialog shell: `SkinDialog`
 - Generic modal sheet shell: `SkinBottomSheet`
+- Floating navigation bar with selected/unselected items and optional translucent surface: `SkinFloatingNavigationBar`
 - Showcase demonstrates tabs, palette cards, switch/chip/slider states, buttons, dialog and sheet with local-only demo state.
 
 ### Still pending
 
 - Extract and verify actual color, typography, spacing, shape, outline and elevation values from Voyage resources/screenshots
 - Replace provisional theme values only when supported by evidence
-- Exact state mapping and light/dark visual comparison for every component
+- Exact state mapping and light/dark visual comparison for every component, including floating navigation
 - More control variants, pressed/focused/disabled states and accessibility semantics
+- Calibrate floating/glass surface opacity, stroke, radius and elevation from source evidence/screenshots
 - Reference screenshots and documented deviation list
 - Verify latest CI run and archive successful showcase APK
 - API usage examples, dependency/license review and tests
