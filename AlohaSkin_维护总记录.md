@@ -513,3 +513,26 @@
 
 **下次续作**
 - 先检查 Run `40329133639` 与 `40329168534`，以最新代码 SHA 为准；修复任何构建错误，下载并校验对应 APK，再继续视觉证据校准与许可/测试收尾。
+
+
+### K.017 — 2026-10-26：依据 MaterialKolor 2.0.0 源码修正动画 API 并重建
+
+**失败原因与核验**
+- 动画接入提交 `b8f0a3785bd1ef23b6244fd659b689dee3a89b8e` 对应 Run `40329133639` 构建失败，日志指向 `SkinTheme.kt:93` 的 `DynamicMaterialTheme` 调用参数不匹配。
+- 直接检查 MaterialKolor 2.0.0 tag 源码后确认，该版本的 `DynamicMaterialTheme` 参数名是 `useDarkTheme` 和 `withAmoled`，不是新版 API 使用的 `isDark` / `isAmoled`。这属于版本 API 差异。
+- 修复提交：`71725fa864b3e15e1f65a89fccc318439b60e7ef`（`fix: use MaterialKolor 2.0 theme parameter names`），已将调用改为与固定依赖 2.0.0 一致的参数名，保留 `animate = true`、共享 shape tokens 和对比度值。
+
+**依赖与许可记录**
+- 新增 `THIRD_PARTY_NOTICES.md`，记录 MaterialKolor 2.0.0 的 MIT 许可及其所包含的 Material Color Utilities Apache-2.0 许可来源。
+- 仍需对完整解析后的 Android/Compose 传递依赖做最终自动化许可盘点；此文件目前是本轮主题生成依赖的初步清单。
+
+**构建状态**
+- 修复提交 `71725fa864b3e15e1f65a89fccc318439b60e7ef` 对应 Run `40329490435`，写入本条时仍为 `in_progress`；必须继续检查最终结论。
+- 已知成功的阶段 APK 对应代码 SHA `0d88e6d1f3eb59faf85fad2a1358a8d8f6d0cb2b`，APK SHA-256 `eb4f1dc9deadecdaa6ae950d5716a30c0a0ea090801f0211ae13dd336324b1da`，但不含本轮动画改动，只能作为阶段性备用包。
+- `main` 未修改/未合并，当前分支仍为 `feature/voyage-visual-system-extraction-20261026`。
+
+**仍未完成**
+1. 验证修复提交的 CI build 和 APK upload 成功；失败则读取完整日志继续修复。
+2. 下载匹配修复代码 SHA 的 APK，验证 ZIP、内部 APK 和 SHA-256。
+3. 视觉 1:1 尚未完成：Voyage 的 seed/style/contrast 精确默认值、动画参数、浅/深色参考截图尺寸、组件状态以及完整设置子项仍需证据核对。
+4. 完成全部依赖许可盘点、测试与无障碍检查后，再评估合并；当前不得合并 `main`。
