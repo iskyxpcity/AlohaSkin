@@ -52,7 +52,7 @@ import com.aloha.skin.components.SkinTabs
 import com.aloha.skin.theme.AlohaSkinTheme
 import com.aloha.skin.theme.SkinColors
 import com.aloha.skin.theme.SkinThemeMode
-import com.materialkolor.PaletteStyle
+import com.aloha.skin.theme.SkinPaletteStyle
 
 private enum class MainPage(val title: String, val icon: String) {
     HOME("主页", "⌂"),
@@ -90,10 +90,10 @@ class MainActivity : ComponentActivity() {
                 Color(0xFF426B45)
             )
             val paletteStyles = listOf(
-                PaletteStyle.TonalSpot,
-                PaletteStyle.Expressive,
-                PaletteStyle.Vibrant,
-                PaletteStyle.Monochrome
+                SkinPaletteStyle.TONAL_SPOT,
+                SkinPaletteStyle.EXPRESSIVE,
+                SkinPaletteStyle.VIBRANT,
+                SkinPaletteStyle.MONOCHROME
             )
             AlohaSkinTheme(
                 themeMode = themeMode,
