@@ -7,7 +7,9 @@ The repository contains a standalone Android Compose library module and a demo s
 ### Components implemented (visual parity not yet certified)
 
 - Semantic light/dark color schemes (provisional fallback values)
-- Optional Android 12+ system dynamic Material 3 palette (opt-in)
+- Optional Android 12+ system dynamic Material 3 palette (opt-in and switchable in Showcase)
+- Shared provisional design tokens: spacing, radii, stroke widths and elevation levels in `SkinTokens.kt`
+- Shared Material 3 shape scale wired through `AlohaSkinTheme`
 - Outlined rounded frame/container: `SkinFrame`
 - Generic surface/container primitive: `SkinSurface`
 - Expandable group with size animation and rotating disclosure glyph: `SkinAccordion`
@@ -22,21 +24,22 @@ The repository contains a standalone Android Compose library module and a demo s
 - Generic confirmation dialog shell: `SkinDialog`
 - Generic modal sheet shell: `SkinBottomSheet`
 - Floating navigation bar with selected/unselected items and optional translucent surface: `SkinFloatingNavigationBar`
-- Showcase demonstrates tabs, palette cards, switch/chip/slider states, buttons, dialog and sheet with local-only demo state.
+- Showcase demonstrates light/dark and dynamic palette switches, tabs, palette cards, switch/chip/slider states, buttons, dialog and sheet with local-only demo state.
 
 ### Still pending
 
 - Extract and verify actual color, typography, spacing, shape, outline and elevation values from Voyage resources/screenshots
-- Custom seed/palette generation and animated scheme transitions are not yet implemented; dependency and source-call-site review required
+- Custom seed/palette generation, Android 14+ contrast adaptation and animated scheme transitions; dependency and source-call-site review required
 - Replace provisional theme values only when supported by evidence
 - Exact state mapping and light/dark visual comparison for every component, including floating navigation
-- Choice chips and action buttons now accept an explicit disabled state; verify visual states and add accessibility semantics
+- Apply shared dimension tokens consistently to all components; existing component-level literals have not all been normalized yet
+- Choice chips and action buttons accept explicit disabled state; verify visual states and add accessibility semantics
 - More control variants, pressed/focused/disabled states and accessibility semantics
-- Calibrate floating/glass surface opacity, stroke, radius and elevation from source evidence/screenshots
+- Calibrate floating/glass surface opacity, stroke, radius, blur and elevation from source evidence/screenshots
 - Reference screenshots and documented deviation list
-- Verify latest CI run and archive successful showcase APK
+- Verify latest CI run and archive the matching successful showcase APK
 - API usage examples, dependency/license review and tests
 
 ### Accuracy note
 
-The current implementation is a reusable scaffold, not a claim of pixel-perfect Voyage parity. Measurements remain explicitly pending in `docs/VISUAL_EVIDENCE.md`. Demo controls intentionally do not trigger Voyage settings or system behavior.
+The current implementation is a reusable scaffold, not a claim of pixel-perfect Voyage parity. Measurements remain explicitly pending in `docs/VISUAL_EVIDENCE.md`. Token values are centralized but remain provisional. Demo controls intentionally do not trigger Voyage settings or system behavior.
