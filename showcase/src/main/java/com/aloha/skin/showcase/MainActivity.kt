@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(horizontal = 20.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            PageOptionFrame(selectedPage)
+                            PageOptionFrame(selectedPage) { selectedPage = it }
                             when (selectedPage) {
                                 MainPage.HOME -> HomePage()
                                 MainPage.FEATURES -> FeaturesPage()
@@ -141,7 +141,7 @@ private fun TotalTitleBar() {
 }
 
 @Composable
-private fun PageOptionFrame(page: MainPage) {
+private fun PageOptionFrame(page: MainPage, onPageSelected: (MainPage) -> Unit) {
     SkinFrame(title = "页面") {
         Row(
             Modifier.fillMaxWidth(),
@@ -152,7 +152,7 @@ private fun PageOptionFrame(page: MainPage) {
                 val selected = item == page
                 Surface(
                     modifier = Modifier.weight(1f).clip(RoundedCornerShape(14.dp))
-                        .clickable(enabled = false) {},
+                        .clickable { onPageSelected(item) },
                     shape = RoundedCornerShape(14.dp),
                     color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
                 ) {
