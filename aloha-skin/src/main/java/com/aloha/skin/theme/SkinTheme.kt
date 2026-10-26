@@ -1,5 +1,6 @@
 package com.aloha.skin.theme
 
+import android.app.UiModeManager
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.materialkolor.PaletteStyle
+import com.materialkolor.rememberDynamicColorScheme
+
+/** User-selectable appearance mode. This is presentation state, not persisted by the library. */
+enum class SkinThemeMode {
+    SYSTEM, LIGHT, DARK
+}
 
 /** Static fallback palette. Values remain provisional until calibrated against Voyage references. */
 object SkinColors {
@@ -30,26 +38,53 @@ object SkinColors {
 }
 
 /**
- * Applies AlohaSkin's semantic Material 3 theme.
+ * Shared theme entry point.
  *
- * [dynamicColor] opts into Android's system dynamic palette on Android 12+.
- * This is theme plumbing only; it does not persist user choices or import Voyage logic.
- * A custom seed/palette generator is intentionally separate and remains future work.
- * Shared shape tokens are applied here; their values remain provisional until measured.
+ * Precedence: explicit legacy [darkTheme] override, then [themeMode]; system colors on Android
+ * 12+ when [dynamicColor] is enabled; MaterialKolor seed palette when [seedColor] is provided;
+ * otherwise the provisional static fallback palette.
+ *
+ * Android 14+ system contrast is passed to MaterialKolor when [contrastLevel] is null.
+ * This module intentionally does not persist settings or invoke Voyage business behavior.
  */
 @Composable
 fun AlohaSkinTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean? = null,
     dynamicColor: Boolean = false,
+    themeMode: SkinThemeMode = SkinThemeMode.SYSTEM,
+    seedColor: Color? = null,
+    paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
+    contrastLevel: Double? = null,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
+    val systemDark = isSystemInDarkTheme()
+    val useDarkTheme = darkTheme ?: when (themeMode) {
+        SkinThemeMode.SYSTEM -> systemDark
+        SkinThemeMode.LIGHT -> false
+        SkinThemeMode.DARK -> true
+    }
+    val systemContrast = if (Build.VERSION.SDK_INT >= 34) {
+        runCatching {
+            context.getSystemService(UiModeManager::class.java)?.contrast?.toDouble()
+        }.getOrNull()
+    } else {
+        null
+    }
+    val resolvedContrast = (contrastLevel ?: systemContrast ?: 0.0).coerceIn(-1.0, 1.0)
+
     val scheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && darkTheme ->
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && useDarkTheme ->
             dynamicDarkColorScheme(context)
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !darkTheme ->
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !useDarkTheme ->
             dynamicLightColorScheme(context)
-        darkTheme -> darkColorScheme(
+        seedColor != null -> rememberDynamicColorScheme(
+            seedColor = seedColor,
+            isDark = useDarkTheme,
+            style = paletteStyle,
+            contrastLevel = resolvedContrast
+        )
+        useDarkTheme -> darkColorScheme(
             primary = SkinColors.DarkAccent,
             onPrimary = Color(0xFF30204F),
             background = SkinColors.DarkBackground,
